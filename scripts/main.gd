@@ -42,3 +42,4 @@ func _ready():
 func _process(delta: float) -> void:
 	input_handler.process()
 	player.process()
+	rival.process()

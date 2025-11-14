@@ -22,8 +22,15 @@ func _init(size: Vector2):
 func process():
 	position += velocity
 
+
+	for area in get_overlapping_areas():
+		if area is Character:
+			area.velocity.x += 15 if area.position.x > position.x else -15
+			area.velocity.y = -15
+			
+
 	velocity.y += 5
-	velocity.x = clamp(velocity.x * 0.5, -10, 10)
+	velocity.x = clamp(velocity.x * 0.7, -10, 10)
 
 	if position.y + size.y / 2 > 0:
 		position.y = - size.y / 2

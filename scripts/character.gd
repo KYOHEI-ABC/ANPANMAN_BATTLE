@@ -23,7 +23,7 @@ func process():
 	position += velocity
 
 	velocity.y += 5
-	velocity.x = clamp(velocity.x * 0.9, -15, 15)
+	velocity.x = clamp(velocity.x * 0.5, -10, 10)
 
 	if position.y + size.y / 2 > 0:
 		position.y = - size.y / 2

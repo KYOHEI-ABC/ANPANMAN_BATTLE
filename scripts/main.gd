@@ -1,6 +1,8 @@
 class_name Main
 extends Node
 
+var input_handler: InputHandler = InputHandler.new()
+
 var player: Character = null
 var rival: Character = null
 
@@ -25,13 +27,12 @@ func _ready():
 	rival.position = Vector2(200, -100)
 	node.add_child(rival)
 
-	var input_handler = InputHandler.new()
 	add_child(input_handler)
 
 	input_handler.direction.connect(func(direction: Vector2) -> void:
 		if direction.y != 0:
 			return
-		player.velocity += direction * 5
+		player.velocity += direction * 3
 	)
 	input_handler.pressed.connect(func() -> void:
 		if player.position.y + player.size.y / 2 >= 0:
@@ -39,4 +40,5 @@ func _ready():
 	)
 
 func _process(delta: float) -> void:
+	input_handler.process()
 	player.process()

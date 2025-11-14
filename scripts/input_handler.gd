@@ -5,9 +5,11 @@ signal pressed()
 signal released()
 signal direction(direction: Vector2)
 
-var threshold: int = 32
+var threshold: int = 50
+var drag_area_end_x: float = ProjectSettings.get_setting("display/window/size/viewport_width") * 0.75
+
 var base_position = null
-var drag_area_end_x: float = ProjectSettings.get_setting("display/window/size/viewport_width") * 0.5
+var delta: Vector2 = Vector2.ZERO
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
@@ -33,7 +35,9 @@ func _input(event: InputEvent) -> void:
 				base_position = event.position
 		if not event.pressed:
 			emit_signal("released")
-			base_position = null
+			if event.position.x < drag_area_end_x:
+				base_position = null
+				delta = Vector2.ZERO
 
 
 	if event is InputEventScreenDrag:
@@ -41,12 +45,14 @@ func _input(event: InputEvent) -> void:
 			return
 		if event.position.x > drag_area_end_x:
 			return
-		var delta = event.position - base_position
-		if delta.x > threshold:
-			emit_signal("direction", Vector2(1, 0))
-		if delta.x < -threshold:
-			emit_signal("direction", Vector2(-1, 0))
-		if delta.y > threshold:
-			emit_signal("direction", Vector2(0, 1))
-		if delta.y < -threshold:
-			emit_signal("direction", Vector2(0, -1))
+		delta = event.position - base_position
+
+func process():
+	if delta.x > threshold:
+		emit_signal("direction", Vector2(1, 0))
+	elif delta.x < -threshold:
+		emit_signal("direction", Vector2(-1, 0))
+	elif delta.y > threshold:
+		emit_signal("direction", Vector2(0, 1))
+	elif delta.y < -threshold:
+		emit_signal("direction", Vector2(0, -1))

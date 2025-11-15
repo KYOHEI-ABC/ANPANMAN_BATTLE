@@ -2,19 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cf1fosxly387b"
-path="res://.godot/imported/a_0.png-ae2cbcce5bbb9c34eeb3ee67c4a7bd4b.ctex"
+uid="uid://bnb6wjuqbm6cb"
+path="res://.godot/imported/index.apple-touch-icon.png-b21a756d869f84af832970a74d8371bc.ctex"
 metadata={
 "vram_texture": false
-}
-generator_parameters={
-"md5": "e8ea2ab88de67b3c98f07fdd0e528b9a"
 }
 
 [deps]
 
-source_file="res://assets/a_0.png"
-dest_files=["res://.godot/imported/a_0.png-ae2cbcce5bbb9c34eeb3ee67c4a7bd4b.ctex"]
+source_file="res://docs/index.apple-touch-icon.png"
+dest_files=["res://.godot/imported/index.apple-touch-icon.png-b21a756d869f84af832970a74d8371bc.ctex"]
 
 [params]
 
@@ -24,7 +21,7 @@ compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -34,4 +31,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

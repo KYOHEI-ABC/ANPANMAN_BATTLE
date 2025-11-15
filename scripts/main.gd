@@ -15,8 +15,11 @@ func _ready():
 	
 	var camera = Camera3D.new()
 	add_child(camera)
-	camera.add_child(DirectionalLight3D.new())
+	var light = DirectionalLight3D.new()
+	camera.add_child(light)
+	light.shadow_enabled = false
 	camera.position = Vector3(0, 0, 8)
+	camera.rotation_degrees = Vector3(0, 0, 0)
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 	camera.size = 8
 	
@@ -24,12 +27,13 @@ func _ready():
 	add_child(node)
 	node.position = window / 2
 
-	var ground = ColorRect.new()
-	ground.color = Color(0, 0.5, 0, 1)
-	ground.size = window
-	ground.position.x = - window.x / 2
-	# ground.position.y = - window.y / 8
+	var ground = MeshInstance3D.new()
+	ground.mesh = QuadMesh.new()
+	ground.mesh.size = Vector2(16, 5.5)
+	ground.position = Vector3(0, -2, -1)
 	node.add_child(ground)
+	ground.material_override = StandardMaterial3D.new()
+	ground.material_override.albedo_color = Color(0, 0.5, 0)
 
 	player = Character.new(0, Vector2(100, 150))
 	player.position = Vector2(-200, -100)

@@ -86,6 +86,7 @@ func _process(_delta: float) -> void:
 		right_leg.rotation_degrees.x = -90
 		left_leg.rotation_degrees.x = 90
 
+
 func reset() -> void:
 	rotation_degrees.x = 0
 	right_arm.rotation_degrees = Vector3.ZERO

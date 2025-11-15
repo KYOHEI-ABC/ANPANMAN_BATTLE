@@ -23,7 +23,7 @@ func _process(_delta: float) -> void:
 		chase = true
 
 
-	if randf() < 0.005 and attack_count == 0:
+	if randf() < 0.007 and attack_count == 0:
 		attack_count = 120
 		character.jump()
 

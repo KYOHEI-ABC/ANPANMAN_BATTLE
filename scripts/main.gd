@@ -52,4 +52,10 @@ func _ready():
 func _process(delta: float) -> void:
 	input_handler.process()
 	player.process()
+
+
+	if randf() < 0.005:
+		rival.jump()
+	rival.walk(1) if player.position.x > rival.position.x else rival.walk(-1)
+
 	rival.process()

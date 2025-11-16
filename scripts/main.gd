@@ -5,6 +5,7 @@ var input_controller: InputController = InputController.new()
 
 var player: Character = Character.new(0, Vector2(100, 150))
 var rival: Character = Character.new(1, Vector2(100, 150))
+var bot: Bot = Bot.new(player, rival)
 
 func _ready():
 	camera()
@@ -22,13 +23,21 @@ func _ready():
 
 	add_child(rival)
 	rival.position = Vector2(200, -rival.size.y / 2)
+	rival.direction = -1
+
+	add_child(bot)
 
 	add_child(input_controller)
 	input_controller.button.connect(func(id: int) -> void:
-		print("Button ", id, " pressed")
+		if id == 3:
+			player.jump()
 	)
 	input_controller.drag.connect(func(direction: Vector2) -> void:
-		print("Drag direction: ", direction)
+		player.is_walking = true
+		player.direction = 1 if direction.x > 0 else -1
+	)
+	input_controller.released.connect(func() -> void:
+		player.is_walking = false
 	)
 
 
@@ -37,6 +46,8 @@ func _process(delta: float) -> void:
 
 	player.process()
 	rival.process()
+
+	bot.process()
 
 
 func camera() -> void:
@@ -64,6 +75,6 @@ class CustomCollisionShape2D extends CollisionShape2D:
 
 		var color_rect = ColorRect.new()
 		add_child(color_rect)
-		color_rect.color = Color.from_hsv(randf(), 1, 1, 0.5)
+		color_rect.color = Color.from_hsv(randf(), 1, 1, 0.0)
 		color_rect.size = size
 		color_rect.position = - size / 2

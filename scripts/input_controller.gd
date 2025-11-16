@@ -7,6 +7,7 @@ var drag_relative: Vector2 = Vector2.ZERO
 
 signal button(id: int)
 signal drag(direction: Vector2)
+signal released()
 
 func _init():
 	var window = Vector2(ProjectSettings.get_setting("display/window/size/viewport_width"), ProjectSettings.get_setting("display/window/size/viewport_height"))
@@ -45,6 +46,8 @@ func _input(input_event: InputEvent) -> void:
 
 		if drag_area.has_point(input_event.position):
 			drag_relative = Vector2.ZERO
+			if not input_event.pressed:
+				emit_signal("released")
 
 	elif input_event is InputEventScreenDrag:
 		if drag_area.has_point(input_event.position):

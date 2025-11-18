@@ -27,8 +27,7 @@ func attack_action() -> void:
 
 func jump() -> void:
 	if on_ground():
-		velocity.y = -30
-		position.y += velocity.y
+		velocity.y = -15
 
 func walk(walk_direction: int) -> void:
 	if walk_direction == 0:
@@ -45,7 +44,6 @@ func process():
 		direction = 1
 	else:
 		direction = -1
-
 	if attack != null:
 		if not attack.process():
 			attack.queue_free()
@@ -59,7 +57,7 @@ func process():
 		position.y = - size.y / 2
 		velocity.y = 0
 	else:
-		velocity.y += 2
+		velocity.y += 0.5
 
 	position.x = clamp(position.x, -800, 800)
 

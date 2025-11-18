@@ -32,47 +32,27 @@ func process() -> void:
 	else:
 		rotation_degrees.y = -90
 
-	if character.attack != null:
-		pass
+	reset()
 
-	else:
-		reset()
+	var position_diff_x = abs(character.position.x / 100 - position.x)
+	if position_diff_x > 0:
+		var rotation = Time.get_ticks_msec() / 1000.0 * PI * 2 * (position_diff_x * 10)
+		right_arm.rotation_degrees.x = sin(rotation) * 30
+		left_arm.rotation_degrees.x = - sin(rotation) * 30
+		right_leg.rotation_degrees.x = - sin(rotation) * 30
+		left_leg.rotation_degrees.x = sin(rotation) * 30
 
-		if not character.on_ground():
-			right_arm.rotation_degrees.x = 30
-			left_arm.rotation_degrees.x = -30
-			right_leg.rotation_degrees.x = -30
-			left_leg.rotation_degrees.x = 30
-		elif character.walk_direction != 0:
-			var rotation = Time.get_ticks_msec() / 100.0
-			right_arm.rotation_degrees.x = sin(rotation) * 30
-			left_arm.rotation_degrees.x = - sin(rotation) * 30
-			right_leg.rotation_degrees.x = - sin(rotation) * 30
-			left_leg.rotation_degrees.x = sin(rotation) * 30
-
-	if character.stun_count > 0:
-		visible = Time.get_ticks_msec() % 100 < 50
-	else:
-		visible = true
+	if not character.on_ground():
+		right_arm.rotation_degrees.x = 30
+		left_arm.rotation_degrees.x = -30
+		right_leg.rotation_degrees.x = -30
+		left_leg.rotation_degrees.x = 30
+	
 
 	position = Vector3(character.position.x / 100, -character.position.y / 100, 0)
 
 func reset() -> void:
 	right_arm.rotation_degrees = Vector3.ZERO
-	right_arm.scale = Vector3(1, 1, 1)
 	left_arm.rotation_degrees = Vector3.ZERO
 	right_leg.rotation_degrees = Vector3.ZERO
 	left_leg.rotation_degrees = Vector3.ZERO
-
-func set_attack_pose(is_finish: bool) -> void:
-	if is_finish:
-		right_arm.rotation_degrees.x = 90
-		right_arm.scale = Vector3(2, 2, 2)
-		left_arm.rotation_degrees.x = -45
-		right_leg.rotation_degrees.x = -90
-		left_leg.rotation_degrees.x = 90
-	else:
-		right_arm.rotation_degrees.x = -90
-		left_arm.rotation_degrees.x = 45
-		right_leg.rotation_degrees.x = 90
-		left_leg.rotation_degrees.x = -90

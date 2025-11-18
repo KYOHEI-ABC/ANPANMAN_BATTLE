@@ -7,7 +7,6 @@ var player: Character = Character.new(0, Vector2(100, 150))
 var rival: Character = Character.new(1, Vector2(100, 150))
 var bot: Bot = Bot.new(rival)
 
-static var PAUSE_COUNT: int = 0
 func _ready():
 	camera()
 
@@ -36,21 +35,13 @@ func _ready():
 		if direction.y < 0:
 			player.jump()
 	)
-	input_controller.released.connect(func() -> void:
-		player.walk(0)
-	)
+	
 	input_controller.pressed.connect(func() -> void:
-		player.attack_action()
+		print("PRESSED")
 	)
 
 
 func _process(delta: float) -> void:
-	if PAUSE_COUNT > 0:
-		PAUSE_COUNT -= 1
-		if rival.model.visible == false:
-			rival.model.visible = true
-		return
-
 	input_controller.process()
 
 	player.process()

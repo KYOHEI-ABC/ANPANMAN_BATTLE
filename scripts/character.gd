@@ -21,6 +21,11 @@ func _init(id: int, size: Vector2):
 	add_child(model)
 
 
+func attack_action() -> void:
+	if attack == null:
+		attack = Attack.Normal.new(self)
+		add_child(attack)
+
 func jump() -> void:
 	if on_ground():
 		velocity.y = -15
@@ -32,6 +37,11 @@ func on_ground() -> bool:
 	return position.y + size.y / 2 >= 0
 
 func process():
+	if attack != null:
+		if not attack.process():
+			attack.queue_free()
+			attack = null
+
 	if position.x < rival.position.x:
 		direction = 1
 	else:

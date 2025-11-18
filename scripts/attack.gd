@@ -27,9 +27,8 @@ class Normal extends Attack:
 			if enabled:
 				for area in get_overlapping_areas():
 					if area is Character and area != character:
-						area.velocity.x += 10 * character.direction
-						area.velocity.y = -5
+						area.damage(Vector2(10 * character.direction, -10))
 						enabled = false
 						Main.FREEZE_COUNT = 20
-						
+
 		return frame_count < 30

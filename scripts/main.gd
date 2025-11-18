@@ -46,8 +46,10 @@ func _ready():
 func _process(delta: float) -> void:
 	if FREEZE_COUNT > 0:
 		FREEZE_COUNT -= 1
+		player.model.visible = true
+		rival.model.visible = true
 		return
-		
+
 	input_controller.process()
 
 	player.process()

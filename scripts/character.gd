@@ -12,6 +12,9 @@ var rival: Character
 
 var attack: Attack
 
+var stun_count: int = 0
+
+var jump_count: int = 0
 
 func _init(id: int, size: Vector2):
 	self.id = id
@@ -22,21 +25,41 @@ func _init(id: int, size: Vector2):
 
 
 func attack_action() -> void:
+	if stun_count > 0:
+		return
 	if attack == null:
 		attack = Attack.Normal.new(self)
 		add_child(attack)
 
+func damage(vector: Vector2) -> void:
+	stun_count = 15
+	velocity += vector
+	if attack != null:
+		attack.queue_free()
+		attack = null
+
 func jump() -> void:
-	if on_ground():
+	if stun_count > 0:
+		return
+	if jump_count == 0:
+		jump_count += 1
 		velocity.y = -15
 
 func walk(_walk_direction: int) -> void:
+	if stun_count > 0:
+		return
 	position.x += _walk_direction * 8
 
 func on_ground() -> bool:
 	return position.y + size.y / 2 >= 0
 
 func process():
+	if stun_count > 0:
+		stun_count -= 1
+
+	if on_ground():
+		jump_count = 0
+
 	if attack != null:
 		if not attack.process():
 			attack.queue_free()

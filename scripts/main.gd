@@ -40,7 +40,7 @@ func _ready():
 		player.walk(0)
 	)
 	input_controller.pressed.connect(func() -> void:
-		print("pressed")
+		player.attack_action()
 	)
 
 
@@ -84,6 +84,6 @@ class CustomCollisionShape2D extends CollisionShape2D:
 
 		var color_rect = ColorRect.new()
 		add_child(color_rect)
-		color_rect.color = Color.from_hsv(randf(), 1, 1, 0)
+		color_rect.color = Color.from_hsv(randf(), 1, 1, 0.5)
 		color_rect.size = size
 		color_rect.position = - size / 2

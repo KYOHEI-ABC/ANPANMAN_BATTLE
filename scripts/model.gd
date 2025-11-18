@@ -32,25 +32,42 @@ func process() -> void:
 	else:
 		rotation_degrees.y = -90
 
-	if not character.on_ground():
-		right_arm.rotation_degrees.x = 30
-		left_arm.rotation_degrees.x = -30
-		right_leg.rotation_degrees.x = -30
-		left_leg.rotation_degrees.x = 30
+	reset()
 
-	elif character.is_walking:
-		var rotation = Time.get_ticks_msec() / 100.0
-		right_arm.rotation_degrees.x = sin(rotation) * 15
-		left_arm.rotation_degrees.x = - sin(rotation) * 15
-		right_leg.rotation_degrees.x = - sin(rotation) * 15
-		left_leg.rotation_degrees.x = sin(rotation) * 15
+	if character.attack != null:
+		if character.attack.frame_count < 20:
+			right_arm.rotation_degrees.x = -90
+			left_arm.rotation_degrees.x = 45
+			right_leg.rotation_degrees.x = 90
+			left_leg.rotation_degrees.x = -90
+		else:
+			right_arm.rotation_degrees.x = 90
+			right_arm.scale = Vector3(2, 2, 2)
+			left_arm.rotation_degrees.x = -45
+			right_leg.rotation_degrees.x = -90
+			left_leg.rotation_degrees.x = 90
 
 	else:
-		right_arm.rotation_degrees.x = 0
-		left_arm.rotation_degrees.x = 0
-		right_leg.rotation_degrees.x = 0
-		left_leg.rotation_degrees.x = 0
+		if not character.on_ground():
+			right_arm.rotation_degrees.x = 30
+			left_arm.rotation_degrees.x = -30
+			right_leg.rotation_degrees.x = -30
+			left_leg.rotation_degrees.x = 30
+		elif character.is_walking:
+			var rotation = Time.get_ticks_msec() / 100.0
+			right_arm.rotation_degrees.x = sin(rotation) * 30
+			left_arm.rotation_degrees.x = - sin(rotation) * 30
+			right_leg.rotation_degrees.x = - sin(rotation) * 30
+			left_leg.rotation_degrees.x = sin(rotation) * 30
+
 
 	# visible = Time.get_ticks_msec() % 100 < 50
 
 	position = Vector3(character.position.x / 100, -character.position.y / 100, 0)
+
+func reset() -> void:
+	right_arm.rotation_degrees = Vector3.ZERO
+	right_arm.scale = Vector3(1, 1, 1)
+	left_arm.rotation_degrees = Vector3.ZERO
+	right_leg.rotation_degrees = Vector3.ZERO
+	left_leg.rotation_degrees = Vector3.ZERO

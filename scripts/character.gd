@@ -11,6 +11,7 @@ var velocity: Vector2 = Vector2.ZERO
 var rival: Character
 
 var is_walking: bool = false
+var attack: Attack
 
 func _init(id: int, size: Vector2):
 	self.id = id
@@ -18,6 +19,11 @@ func _init(id: int, size: Vector2):
 	add_child(Main.CustomCollisionShape2D.new(size))
 	model = Model.new(self)
 	add_child(model)
+
+func attack_action() -> void:
+	if attack == null:
+		attack = Attack.new(self)
+		add_child(attack)
 
 func jump() -> void:
 	if on_ground():
@@ -40,12 +46,19 @@ func process():
 	else:
 		direction = -1
 
+	if attack != null:
+		if not attack.process():
+			attack.queue_free()
+			attack = null
 
+	position.x += velocity.x
+	velocity.x *= 0.9
+
+	position.y += velocity.y
 	if on_ground():
 		position.y = - size.y / 2
 		velocity.y = 0
 	else:
-		position.y += velocity.y
 		velocity.y += 2
 
 	position.x = clamp(position.x, -800, 800)

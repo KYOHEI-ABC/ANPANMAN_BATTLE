@@ -44,6 +44,7 @@ func jump() -> void:
 	if jump_count == 0:
 		jump_count += 1
 		velocity.y = -15
+		position.y += velocity.y
 
 func walk(_walk_direction: int) -> void:
 	if stun_count > 0:
@@ -74,7 +75,7 @@ func process():
 	velocity.x *= 0.9
 
 	position.y += velocity.y
-	velocity.y += 0.5
+	velocity.y += 1
 
 
 	position.x = clamp(position.x, -800, 800)

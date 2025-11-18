@@ -22,10 +22,13 @@ func _input(input_event: InputEvent) -> void:
 		if area.has_point(input_event.position):
 			if input_event.pressed:
 				pressed_position = input_event.position
-				emit_signal("pressed")
+				# emit_signal("pressed")
 			else:
 				emit_signal("released")
 			relative_position = Vector2.ZERO
+		elif input_event.pressed:
+			emit_signal("pressed")
+
 
 	elif input_event is InputEventScreenDrag:
 		if area.has_point(input_event.position):

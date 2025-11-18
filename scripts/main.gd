@@ -39,6 +39,9 @@ func _ready():
 	input_controller.released.connect(func() -> void:
 		player.walk(0)
 	)
+	input_controller.pressed.connect(func() -> void:
+		print("pressed")
+	)
 
 
 func _process(delta: float) -> void:

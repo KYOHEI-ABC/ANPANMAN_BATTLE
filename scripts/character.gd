@@ -22,7 +22,7 @@ func _init(id: int, size: Vector2):
 
 func attack_action() -> void:
 	if attack == null:
-		attack = Attack.new(self)
+		attack = Attack.Normal.new(self)
 		add_child(attack)
 
 func jump() -> void:
@@ -41,21 +41,22 @@ func process():
 		direction = 1
 	else:
 		direction = -1
-	if attack != null:
-		if not attack.process():
-			attack.queue_free()
-			attack = null
+
 
 	position.x += velocity.x
 	velocity.x *= 0.9
 
 	position.y += velocity.y
+	velocity.y += 0.5
+
+	if attack != null:
+		if not attack.process():
+			attack.queue_free()
+			attack = null
+
+	position.x = clamp(position.x, -800, 800)
 	if on_ground():
 		position.y = - size.y / 2
 		velocity.y = 0
-	else:
-		velocity.y += 0.5
-
-	position.x = clamp(position.x, -800, 800)
 
 	model.process()

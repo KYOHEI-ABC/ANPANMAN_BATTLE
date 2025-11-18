@@ -32,24 +32,11 @@ func process() -> void:
 	else:
 		rotation_degrees.y = -90
 
-
 	if character.attack != null:
 		pass
-		# if character.attack.frame_count < 20:
-		# 	right_arm.rotation_degrees.x = -90
-		# 	left_arm.rotation_degrees.x = 45
-		# 	right_leg.rotation_degrees.x = 90
-		# 	left_leg.rotation_degrees.x = -90
-		# else:
-		# 	right_arm.rotation_degrees.x = 90
-		# 	right_arm.scale = Vector3(2, 2, 2)
-		# 	left_arm.rotation_degrees.x = -45
-		# 	right_leg.rotation_degrees.x = -90
-		# 	left_leg.rotation_degrees.x = 90
 
 	else:
 		reset()
-
 
 		if not character.on_ground():
 			right_arm.rotation_degrees.x = 30
@@ -62,7 +49,6 @@ func process() -> void:
 			left_arm.rotation_degrees.x = - sin(rotation) * 30
 			right_leg.rotation_degrees.x = - sin(rotation) * 30
 			left_leg.rotation_degrees.x = sin(rotation) * 30
-
 
 	# visible = Time.get_ticks_msec() % 100 < 50
 

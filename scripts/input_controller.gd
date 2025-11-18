@@ -18,6 +18,10 @@ func _init():
 	area.size.x = window.x * 0.8
 
 func _input(input_event: InputEvent) -> void:
+	if input_event is InputEventKey and input_event.pressed:
+		if input_event.keycode == KEY_SPACE or input_event.keycode == KEY_ENTER:
+			emit_signal("pressed")
+
 	if input_event is InputEventScreenTouch:
 		if area.has_point(input_event.position):
 			if input_event.pressed:

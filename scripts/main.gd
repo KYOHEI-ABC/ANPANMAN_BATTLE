@@ -7,7 +7,7 @@ var player: Character = Character.new(0, Vector2(100, 150))
 var rival: Character = Character.new(1, Vector2(100, 150))
 var bot: Bot = Bot.new(rival)
 
-static var PAUSE_COUNTER: int = 0
+static var PAUSE_COUNT: int = 0
 func _ready():
 	camera()
 
@@ -45,8 +45,8 @@ func _ready():
 
 
 func _process(delta: float) -> void:
-	if PAUSE_COUNTER > 0:
-		PAUSE_COUNTER -= 1
+	if PAUSE_COUNT > 0:
+		PAUSE_COUNT -= 1
 		if rival.model.visible == false:
 			rival.model.visible = true
 		return

@@ -5,7 +5,7 @@ var input_controller: InputController = InputController.new()
 
 var player: Character = Character.new(0, Vector2(100, 150))
 var rival: Character = Character.new(1, Vector2(100, 150))
-var bot: Bot = Bot.new(player, rival)
+var bot: Bot = Bot.new(rival)
 
 static var PAUSE_COUNTER: int = 0
 func _ready():
@@ -21,22 +21,20 @@ func _ready():
 
 	add_child(player)
 	player.position = Vector2(-200, -player.size.y / 2)
+	player.rival = rival
 
 	add_child(rival)
 	rival.position = Vector2(200, -rival.size.y / 2)
-	rival.direction = -1
+	rival.rival = player
 
 	add_child(bot)
 
 	add_child(input_controller)
-	input_controller.button.connect(func(id: int) -> void:
-		if id == 2:
-			player.attack_execute()
-		elif id == 3:
-			player.jump()
-	)
 	input_controller.drag.connect(func(direction: Vector2) -> void:
-		player.walk(1 if direction.x > 0 else -1)
+		if direction.x != 0:
+			player.walk(direction.x)
+		if direction.y < 0:
+			player.jump()
 	)
 	input_controller.released.connect(func() -> void:
 		player.walk(0)
@@ -49,6 +47,7 @@ func _process(delta: float) -> void:
 		if rival.model.visible == false:
 			rival.model.visible = true
 		return
+
 	input_controller.process()
 
 	player.process()

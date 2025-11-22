@@ -5,7 +5,6 @@ var size: Vector2
 var velocity: Vector2
 
 var attack_counts: Array[int]
-var stun_count: int = 0
 
 var rival: Character
 
@@ -32,12 +31,6 @@ func attack():
 	if attack_counts.size() >= 3:
 		return
 	attack_counts.append(24)
-
-func damage(vector: Vector2) -> void:
-	if stun_count > 0:
-		return
-	stun_count = 15
-	velocity += vector
 
 func combo_count() -> int:
 	for i in range(attack_counts.size()):
@@ -73,15 +66,13 @@ func process():
 	clamp_position()
 
 	attack_process()
-	if stun_count > 0:
-		stun_count -= 1
 
 	model.process()
 
 func walk(walk_direction: int):
 	if control_enabled == false:
 		return
-	velocity.x += walk_direction * 2
+	position.x += walk_direction * 8
 
 func jump():
 	if control_enabled == false:

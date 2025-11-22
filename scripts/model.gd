@@ -25,25 +25,13 @@ func _init(character: Character) -> void:
 	legs = [root.get_node("right_leg"), root.get_node("left_leg")]
 
 func process():
-	visible = true
-	if character.stun_count > 0:
-		visible = false if Time.get_ticks_msec() % 100 < 50 else true
-
-
+	# visible = false if Time.get_ticks_msec() % 100 < 50 else true
 	if character.direction() == 1:
 		rotation_degrees.y = 0
 	else:
 		rotation_degrees.y = -90
 
-	if character.combo_count() == 0:
-		if character.is_on_floor():
-			if abs(character.position.x / 100 - position.x) > 0.01:
-				walk(Time.get_ticks_msec() / 1000.0)
-			else:
-				idle()
-		else:
-			jump()
-
+	
 	position = Vector3(character.position.x / 100, -character.position.y / 100, 0)
 
 func idle() -> void:

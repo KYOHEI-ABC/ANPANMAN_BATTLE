@@ -4,14 +4,18 @@ extends Area2D
 var size: Vector2
 var velocity: Vector2
 
-var attack_counts: Array[int]
-
 var rival: Character
 
 var control_enabled: bool = true
 var physics_enabled: bool = true
 
 var model: Model
+
+var walk_step: float = 8.0
+var jump_power: float = 32.0
+var velocity_x_decay: float = 0.8
+var custom_gravity: float = 2.0
+
 
 func _init(size: Vector2):
 	self.size = size
@@ -27,19 +31,24 @@ func _init(size: Vector2):
 
 	add_child(model)
 
-func attack():
-	if attack_counts.size() >= 3:
+func walk(walk_direction: int):
+	if control_enabled == false:
 		return
-	attack_counts.append(24)
-
-func combo_count() -> int:
-	for i in range(attack_counts.size()):
-		if attack_counts[i] >= 0:
-			return i + 1
-	return 0
+	position.x += walk_direction * walk_step
 
 func is_on_floor() -> bool:
 	return position.y + size.y / 2 >= 0
+	
+func jump():
+	if control_enabled == false:
+		return
+	if not is_on_floor():
+		return
+	velocity.y = - jump_power
+
+
+func attack(is_special: bool):
+	pass
 
 func direction() -> int:
 	return 1 if rival.position.x > position.x else -1
@@ -49,12 +58,12 @@ func physics_process():
 		return
 	position += velocity
 
-	velocity.x *= 0.8
+	velocity.x *= velocity_x_decay
 	if is_on_floor():
 		velocity.y = 0
 		position.y = - size.y / 2
 	else:
-		velocity.y += 2
+		velocity.y += custom_gravity
 
 func clamp_position():
 	position.x = clamp(position.x, -800, 800)
@@ -63,27 +72,6 @@ func clamp_position():
 func process():
 	physics_process()
 
-	attack_process()
-
 	clamp_position()
 
 	model.process()
-
-func walk(walk_direction: int):
-	if control_enabled == false:
-		return
-	position.x += walk_direction * 8
-
-func jump():
-	if control_enabled == false:
-		return
-	if not is_on_floor():
-		return
-	velocity.y = -32
-
-func attack_process():
-	for i in range(attack_counts.size()):
-		attack_counts[i] -= 1
-		if attack_counts[i] >= 0:
-			return
-	attack_counts.clear()

@@ -20,15 +20,17 @@ func _ready():
 
 	player.rival = rival
 	rival.rival = player
-
+	
+	var window: Vector2 = Vector2(ProjectSettings.get_setting("display/window/size/viewport_width"), ProjectSettings.get_setting("display/window/size/viewport_height"))
+	
 	add_child(input_controller)
-	input_controller.rect.end.x = ProjectSettings.get_setting("display/window/size/viewport_width") * 0.75
+	input_controller.rect.end.x = window.x * 0.8
 
 	var input_controller_pressed = InputController.new()
 	add_child(input_controller_pressed)
-	input_controller_pressed.rect.position.x = ProjectSettings.get_setting("display/window/size/viewport_width") * 0.75
+	input_controller_pressed.rect.position.x = window.x * 0.8
 	input_controller_pressed.signal_pressed.connect(func(position: Vector2) -> void:
-		player.attack()
+		player.attack(true if position.y < window.y * 0.5 else false)
 	)
 
 func _process(delta: float) -> void:
@@ -43,9 +45,7 @@ func _process(delta: float) -> void:
 	rival.process()
 
 func camera() -> void:
-	RenderingServer.set_default_clear_color(Color.from_hsv(0.5, 1, 0.8))
-
-	var window = Vector2(ProjectSettings.get_setting("display/window/size/viewport_width"), ProjectSettings.get_setting("display/window/size/viewport_height"))
+	RenderingServer.set_default_clear_color(Color(0, 0.4, 0.8))
 
 	var camera_3d = Camera3D.new()
 	add_child(camera_3d)
@@ -62,8 +62,8 @@ func camera() -> void:
 func stage() -> void:
 	var stage = MeshInstance3D.new()
 	stage.mesh = QuadMesh.new()
-	stage.mesh.size = Vector2(16, 8)
-	stage.position = Vector3(0, -4, -1)
+	stage.mesh.size = Vector2(16, 16)
+	stage.position = Vector3(0, -8, -1)
 	add_child(stage)
 	stage.material_override = StandardMaterial3D.new()
 	stage.material_override.albedo_color = Color(0, 0.5, 0)
@@ -75,6 +75,6 @@ class CustomCollisionShape2D extends CollisionShape2D:
 
 		var color_rect = ColorRect.new()
 		add_child(color_rect)
-		color_rect.color = Color.from_hsv(randf(), 1, 1, 0.3)
+		color_rect.color = Color.from_hsv(randf(), 1, 1, 0.0)
 		color_rect.size = size
 		color_rect.position = - size / 2

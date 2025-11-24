@@ -20,7 +20,6 @@ var velocity_x_decay: float = 0.8
 var custom_gravity: float = 2.0
 
 var attack_count: int = 0
-var special_attack_count: int = 0
 
 func _init(size: Vector2):
 	self.size = size
@@ -51,18 +50,11 @@ func jump():
 		return
 	velocity.y = - jump_power
 
-
-func attack():
+func attack(is_special: bool):
 	pass
 
 func attack_process():
 	attack_count -= 1
-
-func special_attack():
-	pass
-
-func special_attack_process():
-	special_attack_count -= 1
 
 func physics_process():
 	if not physics_enabled:
@@ -81,10 +73,7 @@ func clamp_position():
 	position.y = clamp(position.y, -400, -size.y / 2)
 
 func process():
-	if special_attack_count > 0:
-		special_attack_process()
-	
-	elif attack_count > 0:
+	if attack_count > 0:
 		attack_process()
 
 	direction = 1 if rival.position.x > position.x else -1

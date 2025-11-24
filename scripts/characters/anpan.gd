@@ -17,7 +17,7 @@ func _init():
 	)
 	attack_area.monitoring = false
 	
-func attack():
+func attack(is_special: bool):
 	if attack_counts.size() >= 3:
 		return
 	if attack_counts.size() == 0:

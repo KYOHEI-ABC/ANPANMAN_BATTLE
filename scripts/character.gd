@@ -4,6 +4,8 @@ extends Area2D
 var size: Vector2
 var velocity: Vector2
 
+var continuous_velocity: Vector2 = Vector2.ZERO
+	
 var rival: Character
 
 var control_enabled: bool = true
@@ -53,13 +55,13 @@ func attack():
 	pass
 
 func attack_process():
-	attack_count = -1
+	attack_count -= 1
 
 func special_attack():
 	pass
 
 func special_attack_process():
-	special_attack_count = -1
+	special_attack_count -= 1
 
 
 func direction() -> int:
@@ -89,6 +91,8 @@ func process():
 		attack_process()
 
 	physics_process()
+
+	position += continuous_velocity
 
 	clamp_position()
 

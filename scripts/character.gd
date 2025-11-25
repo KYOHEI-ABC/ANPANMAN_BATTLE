@@ -65,9 +65,9 @@ func attack():
 
 func attack_process():
 	for i in range(attack_counts.size()):
-		attack_counts[i] -= 1
-
 		if attack_counts[i] >= 0:
+			unique_process(false, i + 1, float(one_attack_duration - attack_counts[i]) / one_attack_duration)
+			attack_counts[i] -= 1
 			return
 
 	attack_counts.clear()
@@ -78,7 +78,11 @@ func special():
 	special_count = special_duration
 
 func special_process():
+	unique_process(true, 0, float(special_duration - special_count) / special_duration)
 	special_count -= 1
+
+func unique_process(is_special: bool, combo_count: int, progress: float):
+	print("is_special: %s, combo_count: %d, progress: %f" % [is_special, combo_count, progress])
 
 func physics_process():
 	position += velocity

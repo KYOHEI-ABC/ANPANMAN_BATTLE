@@ -8,6 +8,8 @@ var legs: Array[Node3D] = []
 
 var character: Character
 
+var punch_arm_right: bool = true
+
 func _init(character: Character) -> void:
 	self.character = character
 	
@@ -25,10 +27,10 @@ func _init(character: Character) -> void:
 	legs = [root.get_node("right_leg"), root.get_node("left_leg")]
 
 func process():
-	if character.attack_counts.size() > 0:
+	if character.attack_counts.size() > 0 or character.special_count >= 0:
 		update_position()
 		return
-		
+
 	# visible = false if Time.get_ticks_msec() % 100 < 50 else true
 	idle()
 	
@@ -69,10 +71,12 @@ func walk(progress: float) -> void:
 func jump() -> void:
 	all_rotation_x(30)
 
-func punch(right: bool, scale: float) -> void:
+func punch(scale: float) -> void:
 	idle()
-	all_rotation_x(90 if right else -90)
-	var punch_arm = arms[0] if right else arms[1]
+	all_rotation_x(90 if punch_arm_right else -90)
+	var punch_arm = arms[0] if punch_arm_right else arms[1]
 	punch_arm.scale = Vector3.ONE * scale
-	var rest_arm = arms[1] if right else arms[0]
+	var rest_arm = arms[1] if punch_arm_right else arms[0]
 	rest_arm.rotation_degrees.x = -45
+	
+	punch_arm_right = not punch_arm_right

@@ -5,6 +5,13 @@ var size: Vector2
 var velocity: Vector2
 var direction: int = 1
 
+var attack_counts: Array[int] = []
+var one_attack_duration: int = 24
+var max_combos: int = 3
+
+var special_count: int = -1
+var special_duration: int = 60
+
 var rival: Character
 
 var control_enabled: bool = true
@@ -12,11 +19,10 @@ var control_enabled: bool = true
 var model: Model
 
 var walk_step: float = 8.0
-var jump_power: float = 32.0
+var jump_power: float = 24.0
 var velocity_x_decay: float = 0.8
 var custom_gravity: float = 2.0
 
-var attack_count: int = 0
 
 func _init(size: Vector2):
 	self.size = size
@@ -47,11 +53,32 @@ func jump():
 		return
 	velocity.y = - jump_power
 
-func attack(is_special: bool):
-	pass
+func attack():
+	if attack_counts.size() >= max_combos:
+		return
+	if attack_counts.size() == 0:
+		attack_counts.append(one_attack_duration)
+		return
+	if attack_counts[attack_counts.size() - 1] < one_attack_duration / 2:
+		attack_counts.append(one_attack_duration)
+
 
 func attack_process():
-	attack_count -= 1
+	for i in range(attack_counts.size()):
+		attack_counts[i] -= 1
+
+		if attack_counts[i] >= 0:
+			return
+
+	attack_counts.clear()
+
+func special():
+	if special_count >= 0:
+		return
+	special_count = special_duration
+
+func special_process():
+	special_count -= 1
 
 func physics_process():
 	position += velocity
@@ -68,7 +95,10 @@ func clamp_position():
 	position.y = clamp(position.y, -400, -size.y / 2)
 
 func process():
-	if attack_count > 0:
+	if special_count >= 0:
+		special_process()
+
+	elif attack_counts.size() > 0:
 		attack_process()
 
 	else:

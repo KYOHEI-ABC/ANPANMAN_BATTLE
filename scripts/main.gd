@@ -31,9 +31,9 @@ func _ready():
 	input_controller_pressed.rect.position.x = window.x * 0.8
 	input_controller_pressed.signal_pressed.connect(func(position: Vector2) -> void:
 		if position.y > window.y / 2:
-			player.attack(false)
+			player.attack()
 		else:
-			player.attack(true)
+			player.special()
 	)
 
 func _process(delta: float) -> void:

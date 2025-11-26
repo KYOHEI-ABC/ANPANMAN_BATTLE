@@ -12,6 +12,8 @@ var max_combos: int = 3
 var special_count: int = -1
 var special_duration: int = 60
 
+var attack_areas: Array[AttackArea]
+
 var rival: Character
 
 var control_enabled: bool = true
@@ -54,6 +56,8 @@ func jump():
 	velocity.y = - jump_power
 
 func attack():
+	if special_count >= 0:
+		return
 	if attack_counts.size() >= max_combos:
 		return
 	if attack_counts.size() == 0:
@@ -73,6 +77,8 @@ func attack_process():
 	attack_counts.clear()
 
 func special():
+	if attack_counts.size() > 0:
+		return
 	if special_count >= 0:
 		return
 	special_count = special_duration
@@ -113,3 +119,16 @@ func process():
 	clamp_position()
 
 	model.process()
+
+class AttackArea extends Area2D:
+	var enabled: bool = true
+	var vector: Vector2
+	func _init(size: Vector2):
+		add_child(Main.CustomCollisionShape2D.new(size))
+	func process(character: Character) -> void:
+		if not enabled:
+			return
+		for area in get_overlapping_areas():
+			if area == character.rival:
+				character.rival.velocity = vector
+				enabled = false

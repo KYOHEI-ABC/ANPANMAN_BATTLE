@@ -120,15 +120,23 @@ func process():
 
 	model.process()
 
-class AttackArea extends Area2D:
-	var enabled: bool = true
+class Damage:
+	var amount: int
 	var vector: Vector2
-	func _init(size: Vector2):
+	var duration: int
+	func _init(amount: int, vector: Vector2, duration: int):
+		self.amount = amount
+		self.vector = vector
+		self.duration = duration
+
+class AttackArea extends Area2D:
+	var damage: Damage
+	func _init(size: Vector2, damage: Damage):
+		self.damage = damage
 		add_child(Main.CustomCollisionShape2D.new(size))
+
 	func process(character: Character) -> void:
-		if not enabled:
-			return
 		for area in get_overlapping_areas():
+			# 対戦相手のアタックエリアも検出すれば同時ヒットの実装になるが、今回は見送る
 			if area == character.rival:
-				character.rival.velocity = vector
-				enabled = false
+				print(area)

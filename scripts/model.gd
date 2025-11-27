@@ -27,11 +27,18 @@ func _init(character: Character) -> void:
 	legs = [root.get_node("right_leg"), root.get_node("left_leg")]
 
 func process():
+	if character.stunned_count > 0:
+		visible = false if Time.get_ticks_msec() % 100 < 50 else true
+		update_position()
+		return
+	
+	if visible == false:
+		visible = true
+
 	if character.attack_counts.size() > 0 or character.special_count >= 0:
 		update_position()
 		return
 
-	# visible = false if Time.get_ticks_msec() % 100 < 50 else true
 	idle()
 	
 	if character.direction == 1:
@@ -82,4 +89,7 @@ func punch(scale: float) -> void:
 	punch_arm_right = not punch_arm_right
 
 func finish() -> void:
-	punch(1 + (character.combo_count() - 1) * 0.5)
+	if character.attack_counts.size() > 0:
+		punch(1 + (character.combo_count() - 1) * 0.5)
+	else:
+		punch(1)

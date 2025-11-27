@@ -154,6 +154,11 @@ func process():
 
 		physics_process()
 
+	for area in get_overlapping_areas():
+		if area == rival:
+			model.finish()
+			rival.take_damage(Damage.new(0, Vector2(8 * direction, -8), 20))
+
 	clamp_position()
 
 	model.process()

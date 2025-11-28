@@ -27,20 +27,28 @@ func _init(character: Character) -> void:
 	legs = [root.get_node("right_leg"), root.get_node("left_leg")]
 
 func process():
-	# visible = false if Time.get_ticks_msec() % 100 < 50 else true
-	idle()
-	
 	if character.direction == 1:
 		rotation_degrees.y = 0
 	else:
 		rotation_degrees.y = -90
-
-	if character.is_jumping():
+		
+	if character.state == Character.State.FREEZE:
+		visible = false if Time.get_ticks_msec() % 160 < 80 else true
+	elif character.state == Character.State.ATTACKING:
+		pass
+	elif character.state == Character.State.SPECIAL:
+		pass
+	elif character.is_jumping():
 		jump()
 	else:
 		var diff_x = abs(character.position.x / 100 - position.x)
 		if diff_x > 0.01:
 			walk(Time.get_ticks_msec() / 1000.0 * diff_x * 16)
+		else:
+			idle()
+
+	if character.state != Character.State.FREEZE:
+		visible = true
 
 	update_position()
 
@@ -67,6 +75,7 @@ func jump() -> void:
 	all_rotation_x(30)
 
 func punch(scale: float) -> void:
+	idle()
 	all_rotation_x(90 if punch_arm_right else -90)
 	var punch_arm = arms[0] if punch_arm_right else arms[1]
 	punch_arm.scale = Vector3.ONE * scale

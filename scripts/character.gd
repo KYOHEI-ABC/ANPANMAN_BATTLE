@@ -6,7 +6,7 @@ var velocity: Vector2 = Vector2.ZERO
 var direction: int = 1
 
 var attack_counts: Array[int] = []
-var attack_areas: Array[AttackArea]
+var attack_area: AttackArea
 
 var frame_count: int = -1
 
@@ -21,6 +21,11 @@ var velocity_x_decay: float = 0.8
 var custom_gravity: float = 2.0
 var one_attack_duration: int = 24
 var special_duration: int = 60
+
+var attack_damages: Array[Damage] = [
+	Damage.new(10, Vector2(0, -16), 30),
+	Damage.new(30, Vector2(8, -32), 30),
+]
 
 enum State {
 	IDLE,
@@ -92,7 +97,19 @@ func _attack_process():
 	frame_count = -1
 
 func attack_process(progress: float, combo_count: int):
-	pass
+	if progress == 0:
+		if attack_area:
+			attack_area.queue_free()
+		attack_area = AttackArea.new(size / 2, attack_damages[1] if combo_count == 3 else attack_damages[0])
+		add_child(attack_area)
+		attack_area.damage.vector.x *= direction
+		attack_area.position.x = size.x * direction * 0.75
+		model.punch(1 + (combo_count - 1) * 0.5)
+	if progress > 0. and attack_area:
+		for area in attack_area.get_overlapping_areas():
+			if area == rival:
+				rival.damage(attack_area.damage)
+
 
 func special():
 	if state != State.IDLE:
@@ -133,9 +150,8 @@ func idle() -> void:
 
 	attack_counts.clear()
 
-	for area in attack_areas:
-		area.queue_free()
-	attack_areas.clear()
+	if attack_area:
+		attack_area.queue_free()
 
 func physics_process():
 	position += velocity

@@ -1,18 +1,19 @@
 class_name InputController
 extends Node
 
-var rect: Rect2 = Rect2(Vector2(-1000, -1000), Vector2(3000, 3000))
-var i: int = -1
-signal sig(i: int)
+signal pressed(position: Vector2)
 
 func _input(input: InputEvent) -> void:
+	if input is InputEventKey:
+		if input.pressed:
+			if input.keycode == KEY_SPACE:
+				pressed.emit(Vector2(-9999, 9999))
+			if input.keycode == KEY_CTRL:
+				pressed.emit(Vector2(-9999, -9999))
+			if input.keycode == KEY_ENTER:
+				pressed.emit(Vector2(9999, -9999))
+			if input.keycode == KEY_SHIFT:
+				pressed.emit(Vector2(9999, 9999))
 	if input is InputEventScreenTouch:
-		if rect.has_point(input.position):
-			if input.pressed:
-				i = 0
-			else:
-				sig.emit(i)
-				i = -1
-func process() -> void:
-	if i != -1:
-		i += 1
+		if input.pressed:
+			pressed.emit(input.position)

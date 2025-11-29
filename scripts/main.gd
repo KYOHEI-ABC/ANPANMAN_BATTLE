@@ -1,10 +1,9 @@
 class_name Main
 extends Node
 
-var input_controller_left: InputController = InputController.new()
-var input_controller_right: InputController = InputController.new()
 var player: Character
 var rival: Character
+var input_controller: InputController
 
 func _ready():
 	camera()
@@ -21,32 +20,25 @@ func _ready():
 
 	player.rival = rival
 	rival.rival = player
-	
+
 	var window: Vector2 = Vector2(ProjectSettings.get_setting("display/window/size/viewport_width"), ProjectSettings.get_setting("display/window/size/viewport_height"))
+	input_controller = InputController.new()
+	add_child(input_controller)
+	input_controller.pressed.connect(func(position: Vector2):
+		if position.x < window.x / 2:
+			if position.y < window.y / 2:
+				player.jump()
+			else:
+				player.direction *= -1
+		else:
+			if position.y < window.y / 2:
+				player.special()
+			else:
+				player.attack()
+	)
 	
-	add_child(input_controller_left)
-	input_controller_left.rect.end.x = window.x * 0.5
-	input_controller_left.sig.connect(func(i: int):
-		if i < 20:
-			player.direction *= -1
-		else:
-			player.jump()
-	)
-
-	add_child(input_controller_right)
-	input_controller_right.rect.position.x = window.x * 0.5
-	input_controller_right.sig.connect(func(i: int):
-		if i < 20:
-			player.attack()
-		else:
-			player.special()
-	)
-
-
+	
 func _process(delta: float) -> void:
-	input_controller_left.process()
-	input_controller_right.process()
-
 	player.process()
 	rival.process()
 

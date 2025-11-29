@@ -25,7 +25,7 @@ var enable_physics: bool = true
 
 var attack_damages: Array[Damage] = [
 	Damage.new(10, Vector2(2, -16), 20),
-	Damage.new(30, Vector2(16, -32), 20),
+	Damage.new(30, Vector2(64, -32), 20),
 ]
 
 enum State {
@@ -49,6 +49,11 @@ func _init(size: Vector2):
 			model = Baikin.BaikinModel.new(self)
 
 	add_child(model)
+
+func swith_direction():
+	if state != State.IDLE:
+		return
+	direction *= -1
 
 func walk():
 	if state != State.IDLE:
@@ -141,18 +146,28 @@ func process():
 
 	walk()
 
-	bound()
+	collision()
 
 	physics_process()
 
 	clamp_position()
 
+	bound()
+
 	model.process()
 
-func bound() -> void:
+func collision() -> void:
 	for area in get_overlapping_areas():
 		if area == rival:
-			rival.damage(Damage.new(0, Vector2(64 * direction, -24), 15))
+			if direction != rival.direction:
+				var damage = Damage.new(0, Vector2(64 * direction, -16), 20)
+				rival.damage(damage)
+
+func bound() -> void:
+	if position.x == 800:
+		swith_direction()
+	elif position.x == -800:
+		swith_direction()
 
 func idle() -> void:
 	state = State.IDLE
@@ -182,10 +197,6 @@ func physics_process():
 
 func clamp_position():
 	position.x = clamp(position.x, -800, 800)
-	if position.x == 800:
-		direction = -1
-	elif position.x == -800:
-		direction = 1
 	position.y = clamp(position.y, -400, -size.y / 2)
 
 class Damage:

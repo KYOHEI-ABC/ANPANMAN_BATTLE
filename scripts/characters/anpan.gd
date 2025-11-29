@@ -8,6 +8,11 @@ func damage(damage: Damage) -> void:
 	if state == State.SPECIAL:
 		return
 	super.damage(damage)
+
+func bound() -> void:
+	if state == State.SPECIAL:
+		return
+	super.bound()
 		
 class AnpanModel extends Model:
 	pass

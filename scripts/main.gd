@@ -3,6 +3,7 @@ extends Node
 
 var player: Character
 var rival: Character
+var bot: Bot
 var input_controller: InputController
 
 func _ready():
@@ -21,6 +22,9 @@ func _ready():
 	player.rival = rival
 	rival.rival = player
 
+	bot = Bot.new(rival)
+	add_child(bot)
+
 	var window: Vector2 = Vector2(ProjectSettings.get_setting("display/window/size/viewport_width"), ProjectSettings.get_setting("display/window/size/viewport_height"))
 	input_controller = InputController.new()
 	add_child(input_controller)
@@ -29,7 +33,7 @@ func _ready():
 			if position.y < window.y / 2:
 				player.jump()
 			else:
-				player.direction *= -1
+				player.swith_direction()
 		else:
 			if position.y < window.y / 2:
 				player.special()
@@ -41,6 +45,8 @@ func _ready():
 func _process(delta: float) -> void:
 	player.process()
 	rival.process()
+
+	bot.process()
 
 func camera() -> void:
 	RenderingServer.set_default_clear_color(Color(0, 0.4, 0.8))
@@ -73,6 +79,6 @@ class CustomCollisionShape2D extends CollisionShape2D:
 
 		var color_rect = ColorRect.new()
 		add_child(color_rect)
-		color_rect.color = Color.from_hsv(randf(), 1, 1, 0.3)
+		color_rect.color = Color.from_hsv(randf(), 1, 1, 0.0)
 		color_rect.size = size
 		color_rect.position = - size / 2

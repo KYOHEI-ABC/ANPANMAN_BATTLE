@@ -101,6 +101,8 @@ func special():
 func special_process(progress: float) -> void:
 	pass
 
+func take_damage(attack_area: AttackArea) -> void:
+	pass
 
 func process():
 	if state == State.ATTACKING:
@@ -153,7 +155,6 @@ func clamp_position():
 	position.x = clamp(position.x, -800, 800)
 	position.y = clamp(position.y, -400, -size.y / 2)
 
-
 class AttackArea extends Area2D:
 	var character: Character
 	var attack_info: AttackInfo
@@ -189,12 +190,14 @@ class AttackArea extends Area2D:
 		add_child(Main.CustomCollisionShape2D.new(attack_info.size))
 		self.attack_info.vector.x = abs(attack_info.vector.x) * character.direction
 
-	func process() -> void:
-		frame_count += 1
-
+	func process() -> bool:
 		for area in get_overlapping_areas():
-			for other_character in attack_info.character.characters:
-				if other_character == attack_info.character:
+			for other_character in character.characters:
+				if other_character == character:
 					continue
 				if area == other_character:
 					pass
+		frame_count += 1
+		if frame_count > attack_info.existing_count:
+			return false
+		return true

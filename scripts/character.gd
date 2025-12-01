@@ -6,7 +6,7 @@ var velocity: Vector2 = Vector2.ZERO
 var direction: int = 1
 
 var attack_counts: Array[int] = []
-var attack_areas: Array[AttackArea] = []
+var attack_area: AttackArea
 
 var frame_count: int = -1
 
@@ -93,18 +93,7 @@ func attack():
 		state = State.ATTACKING
 		
 func attack_process(progress: float, combo_count: int) -> void:
-	if progress == 0:
-		model.attack(false)
-		attack_areas.append(AttackArea.new(self, size / 2, attack_damages[combo_count - 1].duplicate()))
-		add_child(attack_areas[-1])
-		attack_areas[-1].position.x = size.x * 0.75 * direction
-	elif 0.333 < progress and progress < 0.666:
-		attack_areas[-1].process()
-	elif progress >= 0.666 and progress < 1.0:
-		pass
-	elif progress == 1.0:
-		var attack_area = attack_areas.pop_back()
-		attack_area.queue_free()
+	pass
 	
 func special():
 	if state != State.IDLE:
@@ -157,9 +146,9 @@ func idle() -> void:
 
 	attack_counts.clear()
 
-	for attack_area in attack_areas:
+	if attack_area != null:
 		attack_area.queue_free()
-	attack_areas.clear()
+		attack_area = null
 
 	model.idle()
 

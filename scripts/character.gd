@@ -23,12 +23,6 @@ var velocity_x_decay: float = 0.8
 var one_attack_duration: int = 24
 var special_duration: int = 60
 
-var attack_damages: Array[Damage] = [
-	Damage.new(self, 10, Vector2(2, -8), 20, 3),
-	Damage.new(self, 10, Vector2(4, -16), 20, 6),
-	Damage.new(self, 30, Vector2(8, -32), 20, 9),
-	Damage.new(self, 30, Vector2(16, -64), 20, 12),
-]
 
 enum State {
 	IDLE,
@@ -37,6 +31,9 @@ enum State {
 	FREEZE,
 }
 var state: State = State.IDLE
+
+var attack_info: AttackArea.AttackInfo = AttackArea.AttackInfo.new(Vector2(50, 0), Vector2(100, 100), 0, Vector2.ZERO, 15, 0, 0)
+
 
 func _init(characters: Array[Character], size: Vector2):
 	self.characters = characters
@@ -104,17 +101,6 @@ func special():
 func special_process(progress: float) -> void:
 	pass
 
-func damage(damage: Damage) -> void:
-	if state == State.FREEZE:
-		return
-	if damage.character == characters[0]:
-		if Main.FREEZE_COUNT < 0:
-			Main.FREEZE_COUNT = damage.hit_stop
-	idle()
-	state = State.FREEZE
-	hp -= damage.amount
-	velocity = damage.vector
-	frame_count = damage.duration
 
 func process():
 	if state == State.ATTACKING:
@@ -167,39 +153,48 @@ func clamp_position():
 	position.x = clamp(position.x, -800, 800)
 	position.y = clamp(position.y, -400, -size.y / 2)
 
-class Damage:
-	var character: Character
-
-	var amount: int
-	var vector: Vector2
-	var duration: int
-
-	var hit_stop: int
-
-	func _init(character: Character, amount: int, vector: Vector2, duration: int, hit_stop: int):
-		self.character = character
-		self.amount = amount
-		self.vector = vector
-		self.duration = duration
-		self.vector.x *= self.character.direction
-		self.hit_stop = hit_stop
-
-	func duplicate() -> Damage:
-			return Damage.new(character, amount, vector, duration, hit_stop)
 
 class AttackArea extends Area2D:
 	var character: Character
-	var damage: Damage
-	func _init(character: Character, size: Vector2, damage: Damage):
-		self.character = character
-		add_child(Main.CustomCollisionShape2D.new(size))
+	var attack_info: AttackInfo
+	var frame_count: int = 0
 
-		self.damage = damage
+	class AttackInfo:
+		var position: Vector2
+		var size: Vector2
+	
+		var amount: int = 0
+		var vector: Vector2 = Vector2.ZERO
+
+		var existing_count: int = 0
+		var stun_count: int = 0
+		var hit_stop_count: int = 0
+
+		func _init(position: Vector2, size: Vector2, amount: int, vector: Vector2,
+					existing_count: int, stun_count: int, hit_stop_count: int):
+			self.position = position
+			self.size = size
+			self.amount = amount
+			self.vector = vector
+			self.existing_count = existing_count
+			self.stun_count = stun_count
+			self.hit_stop_count = hit_stop_count
+
+
+	func _init(character: Character, attack_info: AttackInfo):
+		self.character = character
+		self.attack_info = attack_info
+		self.position = attack_info.position
+		self.position.x = abs(attack_info.position.x) * character.direction
+		add_child(Main.CustomCollisionShape2D.new(attack_info.size))
+		self.attack_info.vector.x = abs(attack_info.vector.x) * character.direction
 
 	func process() -> void:
+		frame_count += 1
+
 		for area in get_overlapping_areas():
-			for other_character in character.characters:
-				if other_character == character:
+			for other_character in attack_info.character.characters:
+				if other_character == attack_info.character:
 					continue
 				if area == other_character:
-					other_character.damage(damage)
+					pass

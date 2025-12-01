@@ -12,17 +12,17 @@ func _ready():
 
 	characters.append(Anpan.new(characters))
 	characters.append(Baikin.new(characters))
-	characters.append(Baikin.new(characters))
-	characters.append(Baikin.new(characters))
 	for character in characters:
 		add_child(character)
-	characters[0].position.x = -600
-	characters[1].position.x = -200
-	characters[2].position.x = 200
-	characters[3].position.x = 600
+	characters[0].position.x = -200
+	characters[1].position.x = 200
 
 	add_child(input_controller)
 	input_controller.rect.end.x = ProjectSettings.get_setting("display/window/size/viewport_width") * 0.75
+	input_controller.signal_pressed.connect(func(position: Vector2) -> void:
+		if position.y < ProjectSettings.get_setting("display/window/size/viewport_height") / 2:
+			characters[0].jump()
+	)
 
 	var input_controller_pressed = InputController.new()
 	add_child(input_controller_pressed)

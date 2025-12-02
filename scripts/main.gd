@@ -12,11 +12,11 @@ func _ready():
 	camera()
 	stage()
 
-	player = Anpan.new()
+	player = Baikin.new()
 	add_child(player)
 	player.position.x = -200
 
-	rival = Baikin.new()
+	rival = Anpan.new()
 	add_child(rival)
 	rival.position.x = 200
 

@@ -22,10 +22,10 @@ enum State {
 var state: State = State.IDLE
 
 var attack_infos: Array[Attack.Info] = [
-	Attack.Info.new([8, 8, 8], Vector2(100, 0), Vector2(100, 100), 10, Vector2(2, -4), 20, 10),
-	Attack.Info.new([8, 8, 8], Vector2(100, 0), Vector2(100, 100), 10, Vector2(4, -8), 20, 10),
-	Attack.Info.new([8, 8, 8], Vector2(100, 0), Vector2(100, 100), 20, Vector2(8, -16), 20, 10),
-	Attack.Info.new([16, 64, 16], Vector2(100, 0), Vector2(100, 100), 30, Vector2(16, -32), 20, 10),
+	Attack.Info.new([8, 8, 8], Vector2(96, 0), Vector2(64, 64), 10, Vector2(0, -4), 20, 10),
+	Attack.Info.new([8, 8, 8], Vector2(96, 0), Vector2(64, 64), 10, Vector2(2, -8), 20, 10),
+	Attack.Info.new([8, 8, 8], Vector2(96, 0), Vector2(64, 64), 20, Vector2(4, -16), 20, 10),
+	Attack.Info.new([8, 60, 32], Vector2(96, 0), Vector2(64, 64), 30, Vector2(16, -32), 20, 10),
 ]
 
 
@@ -81,6 +81,16 @@ func attack():
 		state = State.ATTACKING
 		frame_count = 1000000
 	
+func damage(attack: Attack) -> void:
+	if state == State.FREEZE:
+		return
+	idle()
+	state = State.FREEZE
+	frame_count = attack.info.freeze_count
+	velocity = attack.info.knockback
+	velocity.x *= attack.direction
+	Main.HIT_STOP_COUNT = attack.info.hit_stop
+
 func special():
 	if state != State.IDLE:
 		return
@@ -88,6 +98,9 @@ func special():
 	attacks.append(Attack.new(self, attack_infos[3]))
 	add_child(attacks[-1])
 	frame_count = 1000000
+
+func unique_process(attack: Attack) -> void:
+	pass
 
 func process():
 	if state == State.ATTACKING:
@@ -183,14 +196,14 @@ class Attack extends Area2D:
 	func process() -> bool:
 		if frame_count < 0:
 			return false
-		print("Attack frame_count: ", frame_count)
+		character.unique_process(self)
 		frame_count -= 1
 		if info.counts[2] < frame_count and frame_count < info.counts[1] + info.counts[2]:
 			if Main.DEBUG:
 				collision_shape.color_rect.color.a = 0.9
 			for area in get_overlapping_areas():
-				if area == character:
-					pass
+				if area == character.rival:
+					area.damage(self)
 		else:
 			if Main.DEBUG:
 				collision_shape.color_rect.color.a = 0.3

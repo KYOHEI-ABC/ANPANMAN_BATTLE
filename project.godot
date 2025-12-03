@@ -19,6 +19,8 @@ run/max_fps=60
 window/size/viewport_width=1600
 window/size/viewport_height=800
 window/stretch/mode="viewport"
+; window/size/window_width_override = 160
+; window/size/window_height_override = 80
 
 [input_devices]
 

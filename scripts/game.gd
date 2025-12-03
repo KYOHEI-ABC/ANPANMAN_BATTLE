@@ -2,6 +2,7 @@ class_name Game extends Node
 
 var player: Character
 var rival: Character
+var bot: Bot
 var input_controller: InputController = InputController.new()
 
 static var HIT_STOP_COUNT: int = 0
@@ -11,16 +12,19 @@ func _ready():
 	camera()
 	stage()
 
-	player = Baikin.new()
+	player = Anpan.new()
 	add_child(player)
 	player.position.x = -200
 
-	rival = Anpan.new()
+	rival = Baikin.new()
 	add_child(rival)
 	rival.position.x = 200
 
 	player.rival = rival
 	rival.rival = player
+
+	bot = Bot.new(rival, player)
+	add_child(bot)
 
 	add_child(input_controller)
 	input_controller.rect.end.x = ProjectSettings.get_setting("display/window/size/viewport_width") * 0.75
@@ -55,6 +59,8 @@ func _process(delta: float) -> void:
 
 	player.process()
 	rival.process()
+
+	bot.process()
 
 func _input(input: InputEvent) -> void:
 	if not DEBUG:

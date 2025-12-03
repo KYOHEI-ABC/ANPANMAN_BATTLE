@@ -5,6 +5,8 @@ var size: Vector2
 var velocity: Vector2 = Vector2.ZERO
 var direction: int = 1
 
+var hp: int
+
 var rival: Character
 
 var frame_count: int = -1
@@ -12,6 +14,13 @@ var frame_count: int = -1
 var model: Model
 
 var attacks: Array[Attack] = []
+var special_cool_time: int = 0
+var special_cool_time_max: int = 60
+var hp_max: int = 100
+var walk_acceleration: float = 0.8
+var jump_velocity: float = -16
+var friction: float = 0.92
+var character_gravity: float = 0.8
 
 enum State {
 	IDLE,
@@ -24,8 +33,8 @@ var state: State = State.IDLE
 var attack_infos: Array[Attack.Info] = [
 	Attack.Info.new([8, 8, 8], Vector2(96, 0), Vector2(64, 64), 10, Vector2(0, -4), 20, 10),
 	Attack.Info.new([8, 8, 8], Vector2(96, 0), Vector2(64, 64), 10, Vector2(2, -8), 20, 10),
-	Attack.Info.new([8, 8, 8], Vector2(96, 0), Vector2(64, 64), 20, Vector2(4, -16), 20, 10),
-	Attack.Info.new([8, 60, 32], Vector2(96, 0), Vector2(64, 64), 30, Vector2(16, -32), 20, 10),
+	Attack.Info.new([8, 8, 24], Vector2(96, 0), Vector2(64, 64), 20, Vector2(16, -16), 20, 10),
+	Attack.Info.new([16, 60, 32], Vector2(96, 0), Vector2(64, 64), 30, Vector2(16, -32), 20, 10),
 ]
 
 
@@ -34,6 +43,8 @@ func _init(size: Vector2):
 	add_child(Game.CustomCollisionShape2D.new(size))
 
 	position.y = - size.y / 2
+
+	hp = hp_max
 
 	match self.get_script():
 		Anpan:
@@ -47,7 +58,7 @@ func _init(size: Vector2):
 func walk(walk_direction: int) -> void:
 	if state != State.IDLE:
 		return
-	velocity.x += walk_direction * 0.8
+	velocity.x += walk_direction * walk_acceleration
 
 func is_jumping() -> bool:
 	return position.y + size.y / 2 < 0
@@ -57,7 +68,7 @@ func jump():
 		return
 	if is_jumping():
 		return
-	velocity.y = -16
+	velocity.y = jump_velocity
 
 func attack():
 	if state == State.ATTACKING:
@@ -86,6 +97,7 @@ func damage(attack: Attack) -> void:
 		return
 	idle()
 	state = State.FREEZE
+	hp -= attack.info.damage
 	frame_count = attack.info.freeze_count
 	velocity = attack.info.knockback
 	velocity.x *= attack.direction
@@ -93,6 +105,8 @@ func damage(attack: Attack) -> void:
 
 func special():
 	if state != State.IDLE:
+		return
+	if special_cool_time >= 0:
 		return
 	state = State.SPECIAL
 	attacks.append(Attack.new(self, attack_infos[3], 1000))
@@ -115,7 +129,9 @@ func process():
 		var attack = attacks[0]
 		if not attack.process():
 			frame_count = 0
+			special_cool_time = special_cool_time_max
 
+	special_cool_time -= 1
 
 	frame_count -= 1
 	if frame_count < 0:
@@ -146,10 +162,10 @@ func look_at_rival() -> void:
 func physics_process():
 	position += velocity
 
-	velocity.x *= 0.92
+	velocity.x *= friction
 
 	if is_jumping():
-		velocity.y += 0.8
+		velocity.y += character_gravity
 	else:
 		velocity.y = 0
 		position.y = - size.y / 2
@@ -192,6 +208,13 @@ class Attack extends Area2D:
 		collision_shape = Game.CustomCollisionShape2D.new(info.size)
 		self.current_combo = current_combo
 		add_child(collision_shape)
+
+	func is_preparing() -> bool:
+		return frame_count >= info.counts[1] + info.counts[2]
+	func is_active() -> bool:
+		return info.counts[2] < frame_count and frame_count < info.counts[1] + info.counts[2]
+	func is_recovering() -> bool:
+		return frame_count <= info.counts[2]
 
 	func process() -> bool:
 		if frame_count < 0:

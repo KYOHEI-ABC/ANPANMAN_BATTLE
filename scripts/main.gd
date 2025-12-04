@@ -7,7 +7,34 @@ static var WINDOW: Vector2 = Vector2(
 	ProjectSettings.get_setting("display/window/size/viewport_height")
 )
 
-static var PLAYER_INDEX: int = 0
+static var INDEXES: Array[int] = [0, 1]
+
+static var HIT_STOP_COUNT: int = 0
+const DEBUG: bool = true
+
+
+const MODELS: Array[PackedScene] = [
+	preload("res://assets/a.gltf"),
+	preload("res://assets/b.gltf"),
+	preload("res://assets/a.gltf"),
+	preload("res://assets/a.gltf"),
+	preload("res://assets/a.gltf"),
+	preload("res://assets/a.gltf"),
+	preload("res://assets/a.gltf"),
+	preload("res://assets/a.gltf"),
+]
+
+const SPRITES: Array[Texture2D] = [
+	preload("res://assets/a_edited.png"),
+	preload("res://assets/b_edited.png"),
+	preload("res://assets/a_edited.png"),
+	preload("res://assets/a_edited.png"),
+	preload("res://assets/a_edited.png"),
+	preload("res://assets/a_edited.png"),
+	preload("res://assets/a_edited.png"),
+	preload("res://assets/a_edited.png"),
+]
+
 
 func _init() -> void:
 	NODE = self

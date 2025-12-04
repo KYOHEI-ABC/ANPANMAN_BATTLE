@@ -1,6 +1,8 @@
 class_name Character
 extends Area2D
 
+var character_index: int
+
 var size: Vector2
 var velocity: Vector2 = Vector2.ZERO
 var direction: int = 1
@@ -37,6 +39,20 @@ var attack_infos: Array[Attack.Info] = [
 	Attack.Info.new([32, 60, 32], Vector2(50, 0), Vector2(100, 100), 30, Vector2(16, -32), 20, 32),
 ]
 
+static func character_new(index: int) -> Character:
+	var character: Character
+	var model: Model
+	match index:
+		0:
+			character = Anpan.new()
+			character.character_index = index
+			character.model = Anpan.AnpanModel.new(character)
+		1:
+			character = Baikin.new()
+			character.character_index = index
+			character.model = Baikin.BaikinModel.new(character)
+	character.add_child(character.model)
+	return character
 
 func _init(size: Vector2):
 	self.size = size
@@ -45,14 +61,6 @@ func _init(size: Vector2):
 	position.y = - size.y / 2
 
 	hp = hp_max
-
-	match self.get_script():
-		Anpan:
-			model = Anpan.AnpanModel.new(self)
-		Baikin:
-			model = Baikin.BaikinModel.new(self)
-
-	add_child(model)
 
 
 func walk(walk_direction: int) -> void:
@@ -101,7 +109,7 @@ func damage(attack: Attack) -> void:
 	frame_count = attack.info.freeze_count
 	velocity = attack.info.knockback
 	velocity.x *= attack.direction
-	Game.HIT_STOP_COUNT = attack.info.hit_stop
+	Main.HIT_STOP_COUNT = attack.info.hit_stop
 
 func collision() -> void:
 	if state != State.IDLE:
@@ -244,13 +252,13 @@ class Attack extends Area2D:
 		character.unique_process(self)
 		frame_count -= 1
 		if info.counts[2] < frame_count and frame_count < info.counts[1] + info.counts[2]:
-			if Game.DEBUG:
+			if Main.DEBUG:
 				collision_shape.color_rect.color.a = 0.9
 			for area in get_overlapping_areas():
 				if area == character.rival:
 					area.damage(self)
 		else:
-			if Game.DEBUG:
+			if Main.DEBUG:
 				collision_shape.color_rect.color.a = 0.3
 
 		return frame_count >= 0

@@ -5,21 +5,14 @@ var rival: Character
 var bot: Bot
 var input_controller: InputController = InputController.new()
 
-static var HIT_STOP_COUNT: int = 0
-const DEBUG: bool = true
-
 var ready_go_timer: Timer = Timer.new()
 
 func _ready():
 	camera()
 	stage()
 
-	if Main.PLAYER_INDEX == 0:
-		player = Anpan.new()
-		rival = Baikin.new()
-	else:
-		player = Baikin.new()
-		rival = Anpan.new()
+	player = Character.character_new(Main.INDEXES[0])
+	rival = Character.character_new(Main.INDEXES[1])
 	add_child(player)
 	player.position.x = -400
 
@@ -58,8 +51,8 @@ func _process(delta: float) -> void:
 		Main.NODE.add_child(Main.Initial.new())
 		return
 
-	if HIT_STOP_COUNT > 0:
-		HIT_STOP_COUNT -= 1
+	if Main.HIT_STOP_COUNT > 0:
+		Main.HIT_STOP_COUNT -= 1
 		player.model.visible = true
 		rival.model.visible = true
 		return
@@ -77,7 +70,7 @@ func _process(delta: float) -> void:
 	bot.process()
 
 func _input(input: InputEvent) -> void:
-	if not DEBUG:
+	if not Main.DEBUG:
 		return
 	if input is InputEventKey:
 		if input.pressed:
@@ -147,6 +140,6 @@ class CustomCollisionShape2D extends CollisionShape2D:
 
 		color_rect = ColorRect.new()
 		add_child(color_rect)
-		color_rect.color = Color.from_hsv(randf(), 1, 1, 0.3 if Game.DEBUG else 0)
+		color_rect.color = Color.from_hsv(randf(), 1, 1, 0.3 if Main.DEBUG else 0)
 		color_rect.size = size
 		color_rect.position = - size / 2

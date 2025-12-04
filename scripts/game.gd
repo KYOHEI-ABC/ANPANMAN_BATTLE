@@ -8,23 +8,28 @@ var input_controller: InputController = InputController.new()
 static var HIT_STOP_COUNT: int = 0
 const DEBUG: bool = true
 
+var ready_go_timer: Timer = Timer.new()
+
+
 func _ready():
 	camera()
 	stage()
 
 	player = Anpan.new()
 	add_child(player)
-	player.position.x = -200
+	player.position.x = -400
 
 	rival = Baikin.new()
 	add_child(rival)
-	rival.position.x = 200
+	rival.position.x = 400
 
 	player.rival = rival
 	rival.rival = player
 
 	bot = Bot.new(rival, player)
 	add_child(bot)
+
+	ready_go()
 
 	add_child(input_controller)
 	input_controller.rect.end.x = ProjectSettings.get_setting("display/window/size/viewport_width") * 0.75
@@ -103,6 +108,27 @@ func stage() -> void:
 	add_child(stage)
 	stage.material_override = StandardMaterial3D.new()
 	stage.material_override.albedo_color = Color(0, 0.5, 0)
+
+func ready_go() -> void:
+	var label = Main.label_new()
+	add_child(label)
+	label.text = "READY"
+	label.position = Vector2.ZERO - label.size / 2
+
+	set_process(false)
+	player.process()
+	rival.process()
+	add_child(ready_go_timer)
+	ready_go_timer.one_shot = true
+	ready_go_timer.start(1.0)
+	await ready_go_timer.timeout
+	label.text = "GO!"
+	ready_go_timer.start(0.5)
+	await ready_go_timer.timeout
+	label.queue_free()
+	ready_go_timer.queue_free()
+	set_process(true)
+
 
 class CustomCollisionShape2D extends CollisionShape2D:
 	var color_rect: ColorRect

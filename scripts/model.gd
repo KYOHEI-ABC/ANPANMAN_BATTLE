@@ -36,21 +36,6 @@ func process():
 	else:
 		visible = true
 
-	if character.state == Character.State.ATTACKING or character.state == Character.State.SPECIAL:
-		update_position()
-		return
-	
-	if character.is_jumping():
-		jump()
-		update_position()
-		return
-
-	var diff_x = abs(character.position.x / 100 - position.x)
-	if diff_x > 0.01:
-		walk(Time.get_ticks_msec() / 800.0)
-	else:
-		idle()
-
 	update_position()
 
 
@@ -76,64 +61,20 @@ func walk(progress: float) -> void:
 func jump() -> void:
 	all_rotation_x(30)
 
-func attack(finish: bool) -> void:
-	punch(finish)
 
+func punch() -> void:
+	all_rotation_x(45)
+	arms[0].rotation_degrees.x = 90
+	arms[0].scale = Vector3.ONE * 1.5
 
-func switch_right_left() -> void:
-	var rotation = arms[0].rotation_degrees.x
-	arms[0].rotation_degrees.x = arms[1].rotation_degrees.x
-	arms[1].rotation_degrees.x = rotation
+func kick() -> void:
+	all_rotation_x(45)
+	legs[1].rotation_degrees.x = 90
+	legs[1].scale = Vector3.ONE * 1.2
 
-	rotation = legs[0].rotation_degrees.x
-	legs[0].rotation_degrees.x = legs[1].rotation_degrees.x
-	legs[1].rotation_degrees.x = rotation
-
-	var scale = arms[0].scale
-	arms[0].scale = arms[1].scale
-	arms[1].scale = scale
-
-	scale = legs[0].scale
-	legs[0].scale = legs[1].scale
-	legs[1].scale = scale
-
-var right: bool = true
-
-func punch(finish: bool) -> void:
-	idle()
-	if finish:
-		all_rotation_x(45)
-		arms[0].rotation_degrees.x = 90
-		arms[0].scale = Vector3.ONE * 1.5
-		if not right:
-			switch_right_left()
-		right = not right
-	else:
-		all_rotation_x(-45)
-		arms[0].rotation_degrees.x = -90
-		if not right:
-			switch_right_left()
-
-func kick(finish: bool) -> void:
-	idle()
-	if finish:
-		all_rotation_x(45)
-		legs[1].rotation_degrees.x = 90
-		legs[1].scale = Vector3.ONE * 1.2
-	else:
-		all_rotation_x(-45)
-		legs[1].rotation_degrees.x = -90
-
-func hit(finish: bool) -> void:
-	idle()
-	if finish:
-		for arm in arms:
-			arm.rotation_degrees.x = 45
-			arm.scale = Vector3.ONE * 1.2
-		for leg in legs:
-			leg.rotation_degrees.x = -45
-	else:
-		for arm in arms:
-			arm.rotation_degrees.x = 225
-		for leg in legs:
-			leg.rotation_degrees.x = 45
+func hit() -> void:
+	for arm in arms:
+		arm.rotation_degrees.x = 45
+		arm.scale = Vector3.ONE * 1.2
+	for leg in legs:
+		leg.rotation_degrees.x = -45

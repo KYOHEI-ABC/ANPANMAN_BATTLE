@@ -10,7 +10,6 @@ const DEBUG: bool = true
 
 var ready_go_timer: Timer = Timer.new()
 
-
 func _ready():
 	camera()
 	stage()

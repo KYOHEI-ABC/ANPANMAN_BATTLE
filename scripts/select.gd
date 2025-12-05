@@ -35,8 +35,8 @@ func _setup_cursor() -> void:
 
 func _setup_start_button() -> void:
 	var button := Button.new()
-	button.size = Vector2(300, 120)
-	button.add_theme_font_size_override("font_size", 64)
+	button.size = Vector2(360, 100)
+	button.add_theme_font_size_override("font_size", 48)
 	button.text = "START"
 	button.position = Main.WINDOW / 2 - button.size / 2 + Vector2(0, 300)
 	button.pressed.connect(_on_start_pressed)
@@ -44,6 +44,7 @@ func _setup_start_button() -> void:
 
 func _on_start_pressed() -> void:
 	Main.INDEXES[0] = Array2D.get_position_value(map, 0)
+	Main.INDEXES[1] = 1 if Main.INDEXES[0] == 0 else 0
 	queue_free()
 	Main.NODE.add_child(Arcade.new())
 

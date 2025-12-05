@@ -109,7 +109,7 @@ func _input(event: InputEvent) -> void:
 		if event is InputEventScreenTouch and event.pressed:
 			Engine.max_fps = 60
 			queue_free()
-			Main.NODE.add_child(Select.new())
+			Main.NODE.add_child(Main.Initial.new())
 
 func camera() -> void:
 	RenderingServer.set_default_clear_color(Color.from_hsv(0.5, 1, 0.8))
@@ -146,7 +146,7 @@ class CustomCollisionShape2D extends CollisionShape2D:
 
 		color_rect = ColorRect.new()
 		add_child(color_rect)
-		color_rect.color = Color.from_hsv(randf(), 1, 1, 0.5)
+		color_rect.color = Color.from_hsv(randf(), 1, 1, 0.0)
 		color_rect.size = size
 		color_rect.position = - size / 2
 

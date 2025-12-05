@@ -14,7 +14,7 @@ var reaction_delay: int = 0
 var combo_count: int = 0
 var last_rival_x: float = 0.0
 var hesitation: int = 0
-var personality_aggression: float = 0.5 # 0.0 = 防御的, 1.0 = 攻撃的
+var personality_aggression: float = 0.8 # 0.0 = 防御的, 1.0 = 攻撃的
 
 func _init(character: Character, rival: Character) -> void:
 	self.character = character
@@ -119,7 +119,7 @@ func _process_aggressive(direction: int, distance: float) -> void:
 			character.attack()
 	
 	# 必殺技
-	if randf() < 1 / 200.0:
+	if randf() < 1 / 150.0:
 		character.special()
 
 
@@ -193,7 +193,7 @@ func _process_neutral(direction: int, distance: float, rival_moving: bool) -> vo
 			character.attack()
 	
 	# 必殺技
-	if randf() < 1 / 400.0:
+	if randf() < 1 / 300.0:
 		character.special()
 
 

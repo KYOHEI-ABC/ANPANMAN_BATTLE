@@ -85,20 +85,18 @@ func _process(delta: float) -> void:
 	if not game_over:
 		bot.process()
 
-	print("Player HP: %d, Rival HP: %d" % [player.hp, rival.hp])
 
 	hp_sliders[0].value = player.hp / float(player.hp_max) * hp_sliders[0].max_value
 	hp_sliders[1].value = rival.hp / float(rival.hp_max) * hp_sliders[1].max_value
 
 	# Check for game over
 	if player.hp <= 0 or rival.hp <= 0:
-		Main.HIT_STOP_COUNT = 0
 		_start_game_over(rival.hp <= 0)
 
 func _start_game_over(player_wins: bool) -> void:
 	game_over = true
 	is_player_winner = player_wins
-	Engine.max_fps = 30
+	Engine.max_fps = 15
 
 func _show_result() -> void:
 	result_label = Main.label_new()

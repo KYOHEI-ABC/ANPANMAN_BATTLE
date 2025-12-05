@@ -106,6 +106,9 @@ func damage(attack: Attack) -> void:
 	velocity = attack.info.knockback
 	velocity.x *= attack.direction
 	Main.HIT_STOP_COUNT = attack.info.hit_stop
+	if hp <= 0:
+		Main.HIT_STOP_COUNT = 0
+		velocity *= 8
 
 func collision() -> void:
 	if state != State.IDLE:

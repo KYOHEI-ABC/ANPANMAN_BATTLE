@@ -10,6 +10,7 @@ var old_index := -1
 var relative_position := Vector2.ZERO
 
 func _ready() -> void:
+	Main.INDEXES[0] = 0
 	Array2D.set_value(map, Array2D.value_to_vector2(map, Main.INDEXES[0]), 0)
 	_setup_sprites()
 	_setup_cursor()

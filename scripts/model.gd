@@ -21,6 +21,12 @@ func _init(character: Character, model_scene: PackedScene = null) -> void:
 	legs = [root.get_node("right_leg"), root.get_node("left_leg")]
 
 func process():
+	if character.hp <= 0:
+		rotation_degrees.z += -5
+		visible = false if Time.get_ticks_msec() % 200 < 100 else true
+		update_position()
+		return
+
 	if character.direction == 1:
 		rotation_degrees.y = 0
 	else:

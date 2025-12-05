@@ -1,96 +1,90 @@
 class_name Select extends Node
 
+const CELL_SIZE := 160
 
-var sprites: Array[Sprite2D]
+var sprites: Array[Sprite2D] = []
 var cursor: ColorRect
-var map: Array
+var map := Array2D.new_array_2d(Vector2(4, 2), -1)
+var model: Node3D
+var old_index := -1
+var relative_position := Vector2.ZERO
 
 func _ready() -> void:
-	map = Array2D.new_array_2d(Vector2(4, 2), -1)
-	Array2D.set_value(map, Array2D.value_to_vector2(map, Main.INDEXES[0]), 0)
+    Array2D.set_value(map, Array2D.value_to_vector2(map, Main.INDEXES[0]), 0)
+    _setup_sprites()
+    _setup_cursor()
+    _setup_start_button()
+    _setup_camera()
 
-	var center: Vector2 = Vector2.ZERO
-	for i in range(Main.SPRITES.size()):
-		sprites.append(Sprite2D.new())
-		add_child(sprites.back())
-		sprites.back().scale = Vector2(1, 1)
-		sprites.back().texture = Main.SPRITES[i]
-		sprites.back().position = Vector2(i % 4 * 160, 160 * int(i / 4))
-		center += sprites.back().position / Main.SPRITES.size()
-	for sprite in sprites:
-		sprite.position += Main.WINDOW / 2 - center
+func _setup_sprites() -> void:
+    var offset := Main.WINDOW / 2 - Vector2(1.5, 0.5) * CELL_SIZE
+    for i in Main.SPRITES.size():
+        var sprite := Sprite2D.new()
+        sprite.texture = Main.SPRITES[i]
+        sprite.position = Vector2(i % 4, i / 4) * CELL_SIZE + offset
+        sprites.append(sprite)
+        add_child(sprite)
 
-	cursor = ColorRect.new()
-	add_child(cursor)
-	cursor.color = Color.from_hsv(0, 1, 1)
-	cursor.size = Vector2(150, 150)
-	cursor.z_index = -1
+func _setup_cursor() -> void:
+    cursor = ColorRect.new()
+    cursor.color = Color.RED
+    cursor.size = Vector2(150, 150)
+    cursor.z_index = -1
+    add_child(cursor)
 
-	var button = Button.new()
-	add_child(button)
-	button.size = Vector2(300, 120)
-	button.add_theme_font_size_override("font_size", 64)
-	button.text = "START"
-	button.position = Main.WINDOW / 2 - button.size / 2
-	button.position.y += 300
-	button.pressed.connect(func() -> void:
-		if frame_count < 60:
-			return
-		Main.INDEXES[0] = Array2D.get_position_value(map, 0)
-		self.queue_free()
-		Main.NODE.add_child(Arcade.new())
-	)
+func _setup_start_button() -> void:
+    var button := Button.new()
+    button.size = Vector2(300, 120)
+    button.add_theme_font_size_override("font_size", 64)
+    button.text = "START"
+    button.position = Main.WINDOW / 2 - button.size / 2 + Vector2(0, 300)
+    button.pressed.connect(_on_start_pressed)
+    add_child(button)
 
+func _on_start_pressed() -> void:
+    Main.INDEXES[0] = Array2D.get_position_value(map, 0)
+    queue_free()
+    Main.NODE.add_child(Arcade.new())
 
-	var camera_3d = Camera3D.new()
-	add_child(camera_3d)
-	var light = DirectionalLight3D.new()
-	camera_3d.add_child(light)
-	light.shadow_enabled = false
-	camera_3d.position = Vector3(0, 0, 8)
-	camera_3d.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera_3d.size = 2.5
+func _setup_camera() -> void:
+    var camera := Camera3D.new()
+    camera.position = Vector3(0, 0, 8)
+    camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+    camera.size = 2.5
+    add_child(camera)
+    
+    var light := DirectionalLight3D.new()
+    camera.add_child(light)
 
-
-var selected: bool = false
-var relative_position: Vector2
 func _input(event: InputEvent) -> void:
-	if event is InputEventScreenTouch and event.pressed:
-		selected = true
-		relative_position = Vector2.ZERO
-	if event is InputEventScreenDrag:
-		if selected:
-			relative_position += event.relative
-			if relative_position.x > 160:
-				relative_position.x -= 160
-				Array2D.move_value(map, Main.INDEXES[0], Vector2(1, 0))
-			elif relative_position.x < -160:
-				relative_position.x += 160
-				Array2D.move_value(map, Main.INDEXES[0], Vector2(-1, 0))
-			if relative_position.y > 160:
-				relative_position.y -= 160
-				Array2D.move_value(map, Main.INDEXES[0], Vector2(0, 1))
-			elif relative_position.y < -160:
-				relative_position.y += 160
-				Array2D.move_value(map, Main.INDEXES[0], Vector2(0, -1))
-var old_index: int = -1
-var model: Node3D
-var frame_count: int = 0
-func _process(delta: float) -> void:
-	frame_count += 1
-	var position: Vector2 = Array2D.get_position(map, Main.INDEXES[0])
-	cursor.position = sprites[Array2D.vector2_to_value(map, position)].position - cursor.size / 2
+    if event is InputEventScreenTouch and event.pressed:
+        relative_position = Vector2.ZERO
+    elif event is InputEventScreenDrag:
+        relative_position += event.relative
+        for axis in [Vector2.AXIS_X, Vector2.AXIS_Y]:
+            var dir := Vector2.RIGHT if axis == Vector2.AXIS_X else Vector2.DOWN
+            if relative_position[axis] > CELL_SIZE:
+                relative_position[axis] -= CELL_SIZE
+                Array2D.move_value(map, Main.INDEXES[0], dir)
+            elif relative_position[axis] < -CELL_SIZE:
+                relative_position[axis] += CELL_SIZE
+                Array2D.move_value(map, Main.INDEXES[0], -dir)
 
-	var map_index = Array2D.get_position_value(map, 0)
-	if old_index != map_index:
-		old_index = map_index
-		if model != null:
-			model.queue_free()
-			model = null
-		if map_index == 0:
-			model = Main.MODELS[0].instantiate()
-		else:
-			model = Main.MODELS[1].instantiate()
-		add_child(model)
-		model.position = Vector3(-1.75, -0.75, 0)
-		model.rotation_degrees.y = -150
+func _process(_delta: float) -> void:
+    _update_cursor()
+    _update_model()
+
+func _update_cursor() -> void:
+    cursor.position = sprites[Array2D.get_position_value(map, Main.INDEXES[0])].position - cursor.size / 2
+
+func _update_model() -> void:
+    var idx := Array2D.get_position_value(map, 0)
+    if old_index == idx:
+        return
+    old_index = idx
+    if model:
+        model.queue_free()
+    model = Main.MODELS[0 if idx == 0 else 1].instantiate()
+    model.position = Vector3(-1.75, -0.75, 0)
+    model.rotation_degrees.y = -150
+    add_child(model)

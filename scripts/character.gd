@@ -252,13 +252,8 @@ class Attack extends Area2D:
 		character.unique_process(self)
 		frame_count -= 1
 		if info.counts[2] < frame_count and frame_count < info.counts[1] + info.counts[2]:
-			if Main.DEBUG:
-				collision_shape.color_rect.color.a = 0.9
 			for area in get_overlapping_areas():
 				if area == character.rival:
 					area.damage(self)
-		else:
-			if Main.DEBUG:
-				collision_shape.color_rect.color.a = 0.3
 
 		return frame_count >= 0

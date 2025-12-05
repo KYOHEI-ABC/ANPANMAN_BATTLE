@@ -8,10 +8,10 @@ var legs: Array[Node3D] = []
 
 var character: Character
 
-func _init(character: Character) -> void:
+func _init(character: Character, model_scene: PackedScene = null) -> void:
 	self.character = character
 	
-	root = Main.MODELS[character.character_index].instantiate()
+	root = model_scene.instantiate()
 	
 	add_child(root)
 	root.position.y = - character.size.y / 200

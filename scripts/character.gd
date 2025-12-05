@@ -1,8 +1,6 @@
 class_name Character
 extends Area2D
 
-var character_index: int
-
 var size: Vector2
 var velocity: Vector2 = Vector2.ZERO
 var direction: int = 1
@@ -41,16 +39,14 @@ var attack_infos: Array[Attack.Info] = [
 
 static func character_new(index: int) -> Character:
 	var character: Character
-	var model: Model
+	var model_scene: PackedScene = Main.MODELS[index]
 	match index:
 		0:
 			character = Anpan.new()
-			character.character_index = index
-			character.model = Anpan.AnpanModel.new(character)
+			character.model = Anpan.AnpanModel.new(character, model_scene)
 		1:
 			character = Baikin.new()
-			character.character_index = index
-			character.model = Baikin.BaikinModel.new(character)
+			character.model = Baikin.BaikinModel.new(character, model_scene)
 	character.add_child(character.model)
 	return character
 

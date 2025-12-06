@@ -11,7 +11,6 @@ static var PLAYER_INDEX: int = 0
 static var RIVAL_INDEXES: Array[int] = []
 static var HIT_STOP_COUNT: int = 0
 
-
 const MODELS: Array[PackedScene] = [
 	preload("res://assets/a.gltf"),
 	preload("res://assets/b.gltf"),
@@ -51,7 +50,7 @@ class Initial extends Node:
 			Main.NODE.add_child(Select.new())
 
 func camera() -> void:
-	RenderingServer.set_default_clear_color(Color.from_hsv(0.5, 1, 0.8))
+	RenderingServer.set_default_clear_color(Color(0, 0.5, 1))
 
 	var camera_3d = Camera3D.new()
 	add_child(camera_3d)
@@ -72,5 +71,5 @@ static func label_new() -> Label:
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.add_theme_font_size_override("font_size", 128)
-	label.add_theme_color_override("font_color", Color.from_hsv(0.15, 0.75, 1))
+	label.add_theme_color_override("font_color", Color(1, 1, 0))
 	return label

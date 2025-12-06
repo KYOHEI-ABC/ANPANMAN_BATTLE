@@ -24,10 +24,10 @@ func _ready() -> void:
 	add_child(cursor)
 
 	var button := Button.new()
-	button.size = Vector2(360, 80)
+	button.size = Vector2(360, 90)
 	button.add_theme_font_size_override("font_size", 32)
 	button.text = "START"
-	button.position = - button.size / 2 + Vector2(0, 320)
+	button.position = - button.size / 2 + Vector2(0, 300)
 	add_child(button)
 
 	await get_tree().create_timer(0.5).timeout

@@ -8,6 +8,7 @@ var legs: Array[Node3D] = []
 
 var character: Character
 
+
 func _init(character: Character, model_scene: PackedScene = null) -> void:
 	self.character = character
 	
@@ -21,12 +22,6 @@ func _init(character: Character, model_scene: PackedScene = null) -> void:
 	legs = [root.get_node("right_leg"), root.get_node("left_leg")]
 
 func process():
-	if character.hp <= 0:
-		rotation_degrees.z += -5
-		visible = false if Time.get_ticks_msec() % 200 < 100 else true
-		update_position()
-		return
-
 	if character.direction == 1:
 		rotation_degrees.y = 0
 	else:
@@ -77,23 +72,16 @@ func jump() -> void:
 	all_rotation_x(30)
 
 
-func prepare_attack() -> void:
-	all_rotation_x(-45)
-	arms[0].rotation_degrees.x = -90
-
-func finish_attack() -> void:
-	all_rotation_x(45)
-	arms[0].rotation_degrees.x = 90
-	arms[0].scale = Vector3.ONE * 1.5
-
-func kick() -> void:
-	all_rotation_x(45)
-	legs[1].rotation_degrees.x = 90
-	legs[1].scale = Vector3.ONE * 1.2
-
-func hit() -> void:
+func attack_prepare() -> void:
+	attack(1.0)
 	for arm in arms:
-		arm.rotation_degrees.x = 45
-		arm.scale = Vector3.ONE * 1.2
+		arm.rotation_degrees.x *= -1
 	for leg in legs:
-		leg.rotation_degrees.x = -45
+		leg.rotation_degrees.x *= -1
+	
+func attack(scale: float) -> void:
+	idle()
+	all_rotation_x(90)
+	arms[0].scale = Vector3.ONE * scale
+	arms[1].rotation_degrees.x = -45
+	arms[1].scale = Vector3.ONE

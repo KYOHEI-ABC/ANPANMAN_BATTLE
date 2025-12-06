@@ -14,9 +14,11 @@ var frame_count: int = -1
 var model: Model
 
 var attacks: Array[Attack] = []
+var attack_cool_time: int = 0
+var attack_cool_time_max: int = 30
 var special_cool_time: int = 0
-var special_cool_time_max: int = 90
-var hp_max: int = 10
+var special_cool_time_max: int = 300
+var hp_max: int = 100
 var walk_acceleration: float = 0.8
 var jump_velocity: float = -16
 var friction: float = 0.92
@@ -31,10 +33,10 @@ enum State {
 var state: State = State.IDLE
 
 var attack_infos: Array[Attack.Info] = [
-	Attack.Info.new([16, 2, 8], Vector2(50, 0), Vector2(100, 100), 10, Vector2(0, -4), 16, 16),
-	Attack.Info.new([16, 2, 8], Vector2(50, 0), Vector2(100, 100), 10, Vector2(0, -8), 16, 16),
-	Attack.Info.new([16, 2, 16], Vector2(50, 0), Vector2(100, 100), 20, Vector2(16, -16), 16, 16),
-	Attack.Info.new([32, 60, 32], Vector2(50, 0), Vector2(100, 100), 30, Vector2(16, -32), 20, 32),
+	Attack.Info.new([10, 5, 10], Vector2(50, 0), Vector2(100, 100), 10, Vector2(0, -8), 20, 10),
+	Attack.Info.new([10, 5, 10], Vector2(50, 0), Vector2(100, 100), 10, Vector2(0, -8), 20, 10),
+	Attack.Info.new([10, 5, 30], Vector2(50, 0), Vector2(100, 100), 10, Vector2(32, -8), 60, 30),
+	Attack.Info.new([30, 45, 30], Vector2(50, 0), Vector2(100, 100), 30, Vector2(0, -32), 60, 30),
 ]
 
 static func character_new(index: int) -> Character:
@@ -61,6 +63,7 @@ func _init(size: Vector2):
 	position.y = - size.y / 2
 
 	hp = hp_max
+	attack_cool_time = attack_cool_time_max
 
 
 func walk(walk_direction: int) -> void:
@@ -82,6 +85,8 @@ func attack():
 	if state == State.ATTACKING:
 		pass
 	elif state != State.IDLE:
+		return
+	if attack_cool_time < attack_cool_time_max:
 		return
 
 	if attacks.size() == 0:
@@ -112,12 +117,15 @@ func damage(attack: Attack) -> void:
 	Main.HIT_STOP_COUNT = attack.info.hit_stop
 	if hp <= 0:
 		Main.HIT_STOP_COUNT = 0
-		velocity *= 8
+		if position.x < 0:
+			velocity = Vector2(-64, -64)
+		else:
+			velocity = Vector2(64, -64)
 
 func special():
 	if state != State.IDLE:
 		return
-	if special_cool_time >= 0:
+	if special_cool_time < special_cool_time_max:
 		return
 	state = State.SPECIAL
 	attacks.append(Attack.new(self, attack_infos[3], 1000))
@@ -136,13 +144,15 @@ func process():
 				break
 		if attack_finished:
 			frame_count = 0
+			attack_cool_time = 0
 	elif state == State.SPECIAL:
 		var attack = attacks[0]
 		if not attack.process():
 			frame_count = 0
-			special_cool_time = special_cool_time_max
+			special_cool_time = 0
 
-	special_cool_time -= 1
+	attack_cool_time += 1
+	special_cool_time += 1
 
 	frame_count -= 1
 	if frame_count < 0:
@@ -211,6 +221,14 @@ class Attack extends Area2D:
 			self.knockback = knockback
 			self.freeze_count = freeze_count
 			self.hit_stop = hit_stop
+	func total_frame_count() -> int:
+		return info.counts[0] + info.counts[1] + info.counts[2]
+	func is_prepare_frame() -> bool:
+		return info.counts[1] + info.counts[2] <= frame_count
+	func is_active_frame() -> bool:
+		return info.counts[2] < frame_count and frame_count < info.counts[1] + info.counts[2]
+	func is_recover_frame() -> bool:
+		return frame_count <= info.counts[2]
 
 	func _init(character: Character, info: Info, current_combo: int) -> void:
 		self.character = character
@@ -222,22 +240,14 @@ class Attack extends Area2D:
 		self.current_combo = current_combo
 		add_child(collision_shape)
 
-	func is_preparing() -> bool:
-		return frame_count >= info.counts[1] + info.counts[2]
-	func is_active() -> bool:
-		return info.counts[2] < frame_count and frame_count < info.counts[1] + info.counts[2]
-	func is_recovering() -> bool:
-		return frame_count <= info.counts[2]
-
 	func process() -> bool:
 		if frame_count < 0:
 			return false
-		if frame_count == info.counts[0] + info.counts[1] + info.counts[2]:
-			character.model.prepare_attack()
+		if frame_count == total_frame_count():
+			character.model.attack_prepare()
 		elif frame_count == info.counts[1] + info.counts[2]:
-			character.model.finish_attack()
-		elif frame_count == 0:
-			character.model.idle()
+			character.model.attack(2.0 if current_combo == 3 else 1.5)
+			
 		character.unique_process(self)
 		frame_count -= 1
 		if info.counts[2] < frame_count and frame_count < info.counts[1] + info.counts[2]:

@@ -5,6 +5,8 @@ var rival: Character
 var bot: Bot
 var input_controller: InputController = InputController.new()
 var hp_sliders: Array[Game.GameHSlider] = []
+var sp_sliders: Array[Game.GameHSlider] = []
+
 
 var label: Label
 
@@ -32,17 +34,34 @@ func _ready():
 	hp_sliders[1].position = Vector2(50, -380)
 	add_child(hp_sliders[1])
 
+	sp_sliders.append(Game.GameHSlider.new(Vector2(700, 20), Color(1, 1, 0)))
+	sp_sliders[0].position = Vector2(-750, -340)
+	add_child(sp_sliders[0])
+
+	sp_sliders.append(Game.GameHSlider.new(Vector2(700, 20), Color(1, 1, 0)))
+	sp_sliders[1].position = Vector2(50, -340)
+	add_child(sp_sliders[1])
+
+
 	bot = Bot.new(rival, player)
 	add_child(bot)
+
+	set_process(false)
+	player.model.update_position()
+	rival.direction = -1
+	rival.model.update_position()
+	rival.model.rotation_degrees.y = -90
 
 	label = Main.label_new()
 	add_child(label)
 	label.text = "READY"
 
+
 	await get_tree().create_timer(1.0).timeout
 	label.text = "GO!"
 	await get_tree().create_timer(0.5).timeout
 	label.text = ""
+	set_process(true)
 
 	add_child(input_controller)
 	input_controller.rect.end.x = ProjectSettings.get_setting("display/window/size/viewport_width") * 0.75
@@ -93,10 +112,17 @@ func _process(delta: float) -> void:
 
 	# if not game_over:
 	# 	bot.process()
+	for area in player.get_overlapping_areas():
+		if area == rival:
+			var sign = sign(player.position.x - rival.position.x)
+			player.velocity = Vector2(2 * sign, -2)
+			rival.velocity = Vector2(-2 * sign, -2)
 
 	hp_sliders[0].value = player.hp / float(player.hp_max) * hp_sliders[0].max_value
 	hp_sliders[1].value = rival.hp / float(rival.hp_max) * hp_sliders[1].max_value
 
+	sp_sliders[0].value = player.special_cool_time / float(player.special_cool_time_max) * sp_sliders[0].max_value
+	sp_sliders[1].value = rival.special_cool_time / float(rival.special_cool_time_max) * sp_sliders[1].max_value
 
 func quit() -> void:
 	if game_over_count >= 0:
@@ -135,7 +161,7 @@ class CustomCollisionShape2D extends CollisionShape2D:
 
 		color_rect = ColorRect.new()
 		add_child(color_rect)
-		color_rect.color = Color.from_hsv(randf(), 1, 1, 0.5)
+		color_rect.color = Color.from_hsv(randf(), 1, 1, 0.0)
 		color_rect.size = size
 		color_rect.position = - size / 2
 

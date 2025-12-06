@@ -15,8 +15,8 @@ func _ready():
 	camera()
 	stage()
 
-	player = Character.character_new(Main.INDEXES[0])
-	rival = Character.character_new(Main.INDEXES[1])
+	player = Character.character_new(Main.PLAYER_INDEX)
+	rival = Character.character_new(Main.RIVAL_INDEXES[0])
 	add_child(player)
 	player.position.x = -400
 

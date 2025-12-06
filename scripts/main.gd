@@ -7,8 +7,8 @@ static var WINDOW: Vector2 = Vector2(
 	ProjectSettings.get_setting("display/window/size/viewport_height")
 )
 
-static var INDEXES: Array[int] = [0, 1]
-
+static var PLAYER_INDEX: int = 0
+static var RIVAL_INDEXES: Array[int] = []
 static var HIT_STOP_COUNT: int = 0
 
 

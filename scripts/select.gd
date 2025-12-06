@@ -10,8 +10,8 @@ var old_index := -1
 var relative_position := Vector2.ZERO
 
 func _ready() -> void:
-	Main.INDEXES[0] = 0
-	Array2D.set_value(map, Array2D.value_to_vector2(map, Main.INDEXES[0]), 0)
+	Main.PLAYER_INDEX = 0
+	Array2D.set_value(map, Array2D.value_to_vector2(map, Main.PLAYER_INDEX), 0)
 	_setup_sprites()
 	_setup_cursor()
 	_setup_start_button()
@@ -43,8 +43,13 @@ func _setup_start_button() -> void:
 	add_child(button)
 
 func _on_start_pressed() -> void:
-	Main.INDEXES[0] = Array2D.get_position_value(map, 0)
-	Main.INDEXES[1] = 1 if Main.INDEXES[0] == 0 else 0
+	Main.PLAYER_INDEX = Array2D.get_position_value(map, 0)
+	Main.RIVAL_INDEXES.clear()
+	for i in Main.SPRITES.size():
+		if i != Main.PLAYER_INDEX:
+			Main.RIVAL_INDEXES.append(i)
+	Main.RIVAL_INDEXES.shuffle()
+
 	queue_free()
 	Main.NODE.add_child(Arcade.new())
 
@@ -67,17 +72,17 @@ func _input(event: InputEvent) -> void:
 			var dir := Vector2.RIGHT if axis == Vector2.AXIS_X else Vector2.DOWN
 			if relative_position[axis] > CELL_SIZE:
 				relative_position[axis] -= CELL_SIZE
-				Array2D.move_value(map, Main.INDEXES[0], dir)
+				Array2D.move_value(map, Main.PLAYER_INDEX, dir)
 			elif relative_position[axis] < -CELL_SIZE:
 				relative_position[axis] += CELL_SIZE
-				Array2D.move_value(map, Main.INDEXES[0], -dir)
+				Array2D.move_value(map, Main.PLAYER_INDEX, -dir)
 
 func _process(_delta: float) -> void:
 	_update_cursor()
 	_update_model()
 
 func _update_cursor() -> void:
-	cursor.position = sprites[Array2D.get_position_value(map, Main.INDEXES[0])].position - cursor.size / 2
+	cursor.position = sprites[Array2D.get_position_value(map, Main.PLAYER_INDEX)].position - cursor.size / 2
 
 func _update_model() -> void:
 	var idx := Array2D.get_position_value(map, 0)

@@ -72,10 +72,7 @@ func _process(delta: float) -> void:
 		game_over_count -= delta
 		Engine.max_fps = 15
 		if game_over_count < 1.0:
-			if Main.RIVAL_INDEXES.size() == 1 and rival.hp <= 0:
-				label.text = "CONGRATULATIONS"
-			else:
-				label.text = "YOU WIN" if rival.hp <= 0 else "YOU LOSE"
+			label.text = "YOU WIN" if rival.hp <= 0 else "YOU LOSE"
 
 	if Main.HIT_STOP_COUNT > 0:
 		Main.HIT_STOP_COUNT -= 1

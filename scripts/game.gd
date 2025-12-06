@@ -110,8 +110,9 @@ func _process(delta: float) -> void:
 	player.process()
 	rival.process()
 
-	# if not game_over:
-	# 	bot.process()
+	if not is_game_over():
+		bot.process()
+		
 	for area in player.get_overlapping_areas():
 		if area == rival:
 			var sign = sign(player.position.x - rival.position.x)

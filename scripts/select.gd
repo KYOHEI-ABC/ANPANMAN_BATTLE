@@ -28,6 +28,9 @@ func _ready() -> void:
 	button.add_theme_font_size_override("font_size", 32)
 	button.text = "START"
 	button.position = - button.size / 2 + Vector2(0, 320)
+	add_child(button)
+
+	await get_tree().create_timer(0.5).timeout
 	button.pressed.connect(func() -> void:
 		Main.PLAYER_INDEX = Array2D.get_position_value(map, 0)
 		Main.RIVAL_INDEXES.clear()
@@ -38,7 +41,6 @@ func _ready() -> void:
 		Main.NODE.add_child(Arcade.new())
 		queue_free()
 	)
-	add_child(button)
 
 
 static func create_sprites() -> Array[Sprite2D]:

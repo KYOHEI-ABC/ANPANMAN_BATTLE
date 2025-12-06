@@ -106,9 +106,16 @@ func _show_result() -> void:
 func _input(event: InputEvent) -> void:
 	if game_over and result_label != null:
 		if event is InputEventScreenTouch and event.pressed:
+			if is_player_winner:
+				Main.RIVAL_INDEXES.pop_front()
+				if Main.RIVAL_INDEXES.size() == 0:
+					Main.NODE.add_child(Main.Initial.new())
+				else:
+					Main.NODE.add_child(Select.Arcade.new())
+			else:
+				Main.NODE.add_child(Main.Initial.new())
 			Engine.max_fps = 60
 			queue_free()
-			Main.NODE.add_child(Main.Initial.new())
 
 
 func stage() -> void:

@@ -66,16 +66,18 @@ func _ready():
 
 	add_child(input_controller)
 	input_controller.rect.end.x = ProjectSettings.get_setting("display/window/size/viewport_width") * 0.75
-	input_controller.signal_pressed.connect(func(position: Vector2) -> void:
+	input_controller.signal_pressed.connect(func(position: Vector2, double_tap: bool) -> void:
 		quit()
-		if position.y < ProjectSettings.get_setting("display/window/size/viewport_height") / 2:
+		if double_tap:
+			player.dash()
+		elif position.y < ProjectSettings.get_setting("display/window/size/viewport_height") / 2:
 			player.jump()
 	)
 
 	var input_controller_pressed = InputController.new()
 	add_child(input_controller_pressed)
 	input_controller_pressed.rect.position.x = ProjectSettings.get_setting("display/window/size/viewport_width") * 0.75
-	input_controller_pressed.signal_pressed.connect(func(position: Vector2) -> void:
+	input_controller_pressed.signal_pressed.connect(func(position: Vector2, double_tap: bool) -> void:
 		quit()
 		if position.y > ProjectSettings.get_setting("display/window/size/viewport_height") / 2:
 			player.attack()

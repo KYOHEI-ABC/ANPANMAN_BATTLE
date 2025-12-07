@@ -27,7 +27,7 @@ func process():
 	else:
 		rotation_degrees.y = -90
 		
-	if character.state == Character.State.FREEZE:
+	if character.state == Character.State.FREEZE or character.state == Character.State.LOSE:
 		visible = false if Time.get_ticks_msec() % 160 < 80 else true
 	else:
 		visible = true

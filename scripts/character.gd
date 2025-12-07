@@ -24,6 +24,7 @@ var jump_velocity: float = -16
 var friction: float = 0.92
 var character_gravity: float = 0.8
 var attack_move: float = 1.0
+var dash_velocity: float = 16.0
 
 
 enum State {
@@ -68,7 +69,6 @@ func _init(size: Vector2):
 	hp = hp_max
 	attack_cool_time = attack_cool_time_max
 
-
 func walk(walk_direction: int) -> void:
 	if state != State.IDLE:
 		return
@@ -83,6 +83,9 @@ func jump():
 	if is_jumping():
 		return
 	velocity.y = jump_velocity
+
+func dash():
+	velocity.x += dash_velocity * direction
 
 func attack():
 	if state == State.ATTACKING:
@@ -197,6 +200,8 @@ func physics_process():
 		position.y = - size.y / 2
 
 func clamp_position():
+	if state == State.LOSE:
+		return
 	position.x = clamp(position.x, -800, 800)
 	position.y = clamp(position.y, -400, -size.y / 2)
 

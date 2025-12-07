@@ -40,6 +40,9 @@ func process() -> void:
 
 	if randf() < 1 / 180.0:
 		character.jump()
+	if rival.is_jumping():
+		if randf() < 1 / 60.0:
+			character.jump()
 
 	if randf() < 1 / 60.0:
 		character.special()
@@ -47,10 +50,17 @@ func process() -> void:
 	if randf() < 1 / 300.0:
 		character.attack()
 
+	if rival.attack_cool_time < rival.attack_cool_time_max:
+		if randf() < 1 / 15.0:
+			character.dash()
 
 	var distance = abs(character.position.x - rival.position.x)
+
 	if distance < 200:
 		if randf() < attack_probability_close:
-		character.attack()
+			character.attack()
+
+	if randf() < 1 / 180.0:
+		character.dash()
 
 	character.walk(walk_direction)

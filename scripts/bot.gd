@@ -5,10 +5,18 @@ extends Node
 var character: Character
 var rival: Character
 
+var frame_count: int = 0
+var walk_direction: int = 0
+
+var attack_probability_close = 0.2
+
 
 func _init(character: Character, rival: Character) -> void:
 	self.character = character
 	self.rival = rival
+
+	frame_count = randi_range(16, 32)
+	walk_direction = character.direction
 
 
 func process() -> void:
@@ -18,15 +26,26 @@ func process() -> void:
 	if character.state == Character.State.ATTACKING:
 		character.attack()
 
+	frame_count -= 1
+	if frame_count < 0:
+		frame_count = randi_range(16, 32)
+		walk_direction = character.direction
+		if randf() > 0.666:
+			walk_direction = 0 if randf() < 0.666 else character.direction * -1
+
+
 	if randf() < 1 / 60.0:
 		character.jump()
 
 	if randf() < 1 / 60.0:
 		character.special()
 
+	if randf() < 1 / 180.0:
+		character.attack()
+
 	var distance = abs(character.position.x - rival.position.x)
-	if distance > 250:
-		character.walk(character.direction)
-	else:
-		if randf() < 1 / 15.0:
+	if distance < 250:
+		if randf() < attack_probability_close:
 			character.attack()
+
+	character.walk(walk_direction)

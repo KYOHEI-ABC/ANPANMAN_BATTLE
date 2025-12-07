@@ -48,6 +48,7 @@ func _ready():
 
 	set_process(false)
 	player.model.update_position()
+
 	rival.direction = -1
 	rival.model.update_position()
 	rival.model.rotation_degrees.y = -90
@@ -66,9 +67,6 @@ func _ready():
 	add_child(input_controller)
 	input_controller.rect.end.x = ProjectSettings.get_setting("display/window/size/viewport_width") * 0.75
 	input_controller.signal_pressed.connect(func(position: Vector2) -> void:
-		if is_game_over():
-			quit()
-			return
 		if position.y < ProjectSettings.get_setting("display/window/size/viewport_height") / 2:
 			player.jump()
 	)
@@ -77,9 +75,6 @@ func _ready():
 	add_child(input_controller_pressed)
 	input_controller_pressed.rect.position.x = ProjectSettings.get_setting("display/window/size/viewport_width") * 0.75
 	input_controller_pressed.signal_pressed.connect(func(position: Vector2) -> void:
-		if is_game_over():
-			quit()
-			return
 		if position.y > ProjectSettings.get_setting("display/window/size/viewport_height") / 2:
 			player.attack()
 		else:
@@ -87,38 +82,43 @@ func _ready():
 	)
 
 func _process(delta: float) -> void:
-	if is_game_over():
+	if player.hp <= 0 or rival.hp <= 0:
 		game_over_count -= delta
 		Engine.max_fps = 15
 		if game_over_count < 1.0:
 			label.text = "YOU WIN" if rival.hp <= 0 else "YOU LOSE"
 
-	if Main.HIT_STOP_COUNT > 0:
+	if Main.HIT_STOP_COUNT > 0 and player.hp > 0 and rival.hp > 0:
 		Main.HIT_STOP_COUNT -= 1
 		player.model.visible = true
 		rival.model.visible = true
 		return
 
-	if not is_game_over():
-		if input_controller.drag.y < -64:
-			player.jump()
-		if input_controller.drag.x > 8:
-			player.walk(1)
-		if input_controller.drag.x < -8:
-			player.walk(-1)
+	if input_controller.drag.y < -64:
+		player.jump()
+	
+	if input_controller.drag.x > 8:
+		player.walk(1)
+	elif input_controller.drag.x < -8:
+		player.walk(-1)
 
 	player.process()
 	rival.process()
 
-	if not is_game_over():
-		bot.process()
+	bot.process()
+
+	collision()
 		
+func collision() -> void:
 	for area in player.get_overlapping_areas():
 		if area == rival:
 			var sign = sign(player.position.x - rival.position.x)
-			player.velocity = Vector2(2 * sign, -2)
-			rival.velocity = Vector2(-2 * sign, -2)
+			player.velocity = Vector2(2 * sign, 0)
+			rival.velocity = Vector2(-2 * sign, 0)
 
+	update_sliders()
+
+func update_sliders() -> void:
 	hp_sliders[0].value = player.hp / float(player.hp_max) * hp_sliders[0].max_value
 	hp_sliders[1].value = rival.hp / float(rival.hp_max) * hp_sliders[1].max_value
 
@@ -126,8 +126,6 @@ func _process(delta: float) -> void:
 	sp_sliders[1].value = rival.special_cool_time / float(rival.special_cool_time_max) * sp_sliders[1].max_value
 
 func quit() -> void:
-	if game_over_count >= 0:
-		return
 	Engine.max_fps = 60
 	self.queue_free()
 	if player.hp <= 0:
@@ -138,11 +136,6 @@ func quit() -> void:
 			Main.NODE.add_child(Main.Initial.new())
 		else:
 			Main.NODE.add_child(Select.Arcade.new())
-
-func is_game_over() -> bool:
-	if player.hp <= 0 or rival.hp <= 0:
-		return true
-	return false
 
 func stage() -> void:
 	var stage = MeshInstance3D.new()

@@ -29,6 +29,7 @@ enum State {
 	ATTACKING,
 	SPECIAL,
 	FREEZE,
+	LOSE,
 }
 var state: State = State.IDLE
 
@@ -116,11 +117,9 @@ func damage(attack: Attack) -> void:
 	velocity.x *= attack.direction
 	Main.HIT_STOP_COUNT = attack.info.hit_stop
 	if hp <= 0:
-		Main.HIT_STOP_COUNT = 0
-		if position.x < 0:
-			velocity = Vector2(-64, -64)
-		else:
-			velocity = Vector2(64, -64)
+		state = State.LOSE
+		frame_count = 1000000
+
 
 func special():
 	if state != State.IDLE:
@@ -169,6 +168,8 @@ func process():
 	model.process()
 
 func idle() -> void:
+	if state == State.LOSE:
+		return
 	state = State.IDLE
 
 	velocity = Vector2.ZERO
@@ -244,9 +245,9 @@ class Attack extends Area2D:
 		if frame_count < 0:
 			return false
 		if frame_count == total_frame_count():
-			character.model.attack_prepare()
-		elif frame_count == info.counts[1] + info.counts[2]:
-			character.model.attack(2.0 if current_combo == 3 else 1.5)
+			character.model.action()
+		elif frame_count == info.counts[2]:
+			character.model.idle()
 			
 		character.unique_process(self)
 		frame_count -= 1

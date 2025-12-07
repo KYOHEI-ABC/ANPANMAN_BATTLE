@@ -15,6 +15,9 @@ func _init(character: Character, rival: Character) -> void:
 	frame_count = randi_range(15, 45)
 
 func process() -> void:
+	if character.state == Character.State.LOSE:
+		return
+		
 	if character.state == Character.State.ATTACKING:
 		character.attack()
 

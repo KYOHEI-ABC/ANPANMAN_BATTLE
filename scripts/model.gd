@@ -7,7 +7,7 @@ var arms: Array[Node3D] = []
 var legs: Array[Node3D] = []
 
 var character: Character
-
+var walk_count: int = 0
 
 func _init(character: Character, model_scene: PackedScene = null) -> void:
 	self.character = character
@@ -32,9 +32,6 @@ func process():
 	else:
 		visible = true
 
-	if character.state == Character.State.ATTACKING or character.state == Character.State.SPECIAL:
-		update_position()
-		return
 
 	if character.state == Character.State.IDLE:
 		if character.is_jumping():
@@ -42,8 +39,9 @@ func process():
 		else:
 			var diff_x = abs(character.position.x / 100 - position.x)
 			if diff_x > 0.01:
-				walk(Time.get_ticks_msec() / 800.0)
+				walk()
 			else:
+				walk_count = 0
 				idle()
 
 	update_position()
@@ -54,10 +52,6 @@ func update_position():
 
 func idle() -> void:
 	all_rotation_x(0)
-	for arm in arms:
-		arm.scale = Vector3.ONE
-	for leg in legs:
-		leg.scale = Vector3.ONE
 
 func all_rotation_x(x_degrees: float) -> void:
 	arms[0].rotation_degrees.x = x_degrees
@@ -65,23 +59,13 @@ func all_rotation_x(x_degrees: float) -> void:
 	legs[0].rotation_degrees.x = - x_degrees
 	legs[1].rotation_degrees.x = x_degrees
 
-func walk(progress: float) -> void:
-	all_rotation_x(30 * sin(PI * 2 * progress))
+func walk() -> void:
+	var progress = sin(2.0 * PI * walk_count / 45.0)
+	all_rotation_x(45 * progress)
+	walk_count += 1
 
 func jump() -> void:
-	all_rotation_x(30)
+	all_rotation_x(45)
 
-
-func attack_prepare() -> void:
-	attack(1.0)
-	for arm in arms:
-		arm.rotation_degrees.x *= -1
-	for leg in legs:
-		leg.rotation_degrees.x *= -1
-	
-func attack(scale: float) -> void:
-	idle()
+func action() -> void:
 	all_rotation_x(90)
-	arms[0].scale = Vector3.ONE * scale
-	arms[1].rotation_degrees.x = -45
-	arms[1].scale = Vector3.ONE

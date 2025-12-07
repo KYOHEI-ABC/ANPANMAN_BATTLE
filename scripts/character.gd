@@ -18,11 +18,13 @@ var attack_cool_time: int = 0
 var attack_cool_time_max: int = 30
 var special_cool_time: int = 0
 var special_cool_time_max: int = 300
-var hp_max: int = 100
+var hp_max: int = 10
 var walk_acceleration: float = 0.8
 var jump_velocity: float = -16
 var friction: float = 0.92
 var character_gravity: float = 0.8
+var attack_move: float = 1.0
+
 
 enum State {
 	IDLE,
@@ -246,9 +248,9 @@ class Attack extends Area2D:
 			return false
 		if frame_count == total_frame_count():
 			character.model.action()
+			character.velocity.x += character.attack_move * direction
 		elif frame_count == info.counts[2]:
 			character.model.idle()
-			
 		character.unique_process(self)
 		frame_count -= 1
 		if info.counts[2] < frame_count and frame_count < info.counts[1] + info.counts[2]:

@@ -67,6 +67,7 @@ func _ready():
 	add_child(input_controller)
 	input_controller.rect.end.x = ProjectSettings.get_setting("display/window/size/viewport_width") * 0.75
 	input_controller.signal_pressed.connect(func(position: Vector2) -> void:
+		quit()
 		if position.y < ProjectSettings.get_setting("display/window/size/viewport_height") / 2:
 			player.jump()
 	)
@@ -75,6 +76,7 @@ func _ready():
 	add_child(input_controller_pressed)
 	input_controller_pressed.rect.position.x = ProjectSettings.get_setting("display/window/size/viewport_width") * 0.75
 	input_controller_pressed.signal_pressed.connect(func(position: Vector2) -> void:
+		quit()
 		if position.y > ProjectSettings.get_setting("display/window/size/viewport_height") / 2:
 			player.attack()
 		else:
@@ -126,6 +128,8 @@ func update_sliders() -> void:
 	sp_sliders[1].value = rival.special_cool_time / float(rival.special_cool_time_max) * sp_sliders[1].max_value
 
 func quit() -> void:
+	if game_over_count > 0:
+		return
 	Engine.max_fps = 60
 	self.queue_free()
 	if player.hp <= 0:

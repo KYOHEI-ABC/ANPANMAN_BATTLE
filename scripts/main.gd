@@ -12,14 +12,14 @@ static var RIVAL_INDEXES: Array[int] = [1, 2, 3, 4, 5, 6, 7]
 static var HIT_STOP_COUNT: int = 0
 
 const MODELS: Array[PackedScene] = [
-	preload("res://assets/a.gltf"),
-	preload("res://assets/b.gltf"),
-	preload("res://assets/a.gltf"),
-	preload("res://assets/a.gltf"),
-	preload("res://assets/a.gltf"),
-	preload("res://assets/a.gltf"),
-	preload("res://assets/a.gltf"),
-	preload("res://assets/a.gltf"),
+	preload("res://assets/anpanman.gltf"),
+	preload("res://assets/baikinman.gltf"),
+	preload("res://assets/anpanman.gltf"),
+	preload("res://assets/baikinman.gltf"),
+	preload("res://assets/anpanman.gltf"),
+	preload("res://assets/baikinman.gltf"),
+	preload("res://assets/anpanman.gltf"),
+	preload("res://assets/baikinman.gltf"),
 ]
 
 const SPRITES: Array[Texture2D] = [

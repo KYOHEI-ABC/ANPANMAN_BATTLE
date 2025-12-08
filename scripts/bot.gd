@@ -23,6 +23,7 @@ func _init(character: Character, rival: Character) -> void:
 
 
 func process() -> void:
+	return
 	if character.state == Character.State.LOSE:
 		return
 

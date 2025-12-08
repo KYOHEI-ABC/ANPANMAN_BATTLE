@@ -18,8 +18,8 @@ func _init(character: Character, model_scene: PackedScene = null) -> void:
 	root.position.y = - character.size.y / 200
 	root.rotation_degrees.y = -135
 
-	arms = [root.get_node("right_arm"), root.get_node("left_arm")]
-	legs = [root.get_node("right_leg"), root.get_node("left_leg")]
+	arms = [root.get_node("RightArm"), root.get_node("LeftArm")]
+	legs = [root.get_node("RightLeg"), root.get_node("LeftLeg")]
 
 func process():
 	if character.direction == 1:

@@ -8,7 +8,7 @@ var rival: Character
 var frame_count: int = 0
 var walk_direction: int = 0
 
-var attack_probability_close = 1 / 16.0
+var attack_probability_close = 1 / 8.0
 
 
 func _init(character: Character, rival: Character) -> void:
@@ -23,6 +23,7 @@ func _init(character: Character, rival: Character) -> void:
 
 
 func process() -> void:
+	# return
 	if character.state == Character.State.LOSE:
 		return
 
@@ -44,7 +45,7 @@ func process() -> void:
 		if randf() < 1 / 16.0:
 			character.jump()
 
-	if randf() < 1 / 32.0:
+	if randf() < 1 / 16.0:
 		character.special()
 
 

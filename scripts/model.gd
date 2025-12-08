@@ -38,7 +38,7 @@ func process():
 			jump()
 		else:
 			var diff_x = abs(character.position.x / 100 - position.x)
-			if diff_x > 0.01:
+			if diff_x > 0.02:
 				walk()
 			else:
 				walk_count = 0

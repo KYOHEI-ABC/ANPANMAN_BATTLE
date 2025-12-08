@@ -24,7 +24,7 @@ var jump_velocity: float = -24.0
 var friction: float = 0.80
 var character_gravity: float = 1.6
 var attack_move: float = 4.0
-var dash_velocity: float = 32.0
+var dash_velocity: float = 48.0
 
 const EFFECT_SPRITE: Texture2D = preload("res://assets/effect.png")
 
@@ -41,8 +41,8 @@ var state: State = State.IDLE
 var attack_infos: Array[Attack.Info] = [
 	Attack.Info.new([8, 2, 8], Vector2(50, 0), Vector2(100, 100), 10, Vector2(0, -8), 8, 8),
 	Attack.Info.new([8, 2, 8], Vector2(50, 0), Vector2(100, 100), 10, Vector2(0, -8), 8, 8),
-	Attack.Info.new([8, 2, 16], Vector2(50, 0), Vector2(100, 100), 10, Vector2(32, -8), 16, 8),
-	Attack.Info.new([16, 32, 16], Vector2(50, 0), Vector2(100, 100), 30, Vector2(0, -32), 32, 8),
+	Attack.Info.new([8, 2, 16], Vector2(50, 0), Vector2(100, 100), 10, Vector2(64, -8), 16, 8),
+	Attack.Info.new([16, 32, 16], Vector2(50, 0), Vector2(100, 100), 30, Vector2(64, -64), 32, 8),
 ]
 
 static func character_new(index: int) -> Character:
@@ -204,6 +204,10 @@ func physics_process():
 func clamp_position():
 	if state == State.LOSE:
 		return
+	if position.x < -600:
+		velocity.x += 6.4
+	elif position.x > 600:
+		velocity.x -= 6.4
 	position.x = clamp(position.x, -640, 640)
 	position.y = clamp(position.y, -320, -size.y / 2)
 
@@ -257,8 +261,7 @@ class Attack extends Area2D:
 		effect_sprite.scale /= 1.5
 		if direction == -1:
 			effect_sprite.flip_h = true
-		# effect_sprite.position.y = -8
-		# effect_sprite.position.x = 8 * direction
+		effect_sprite.position.y = 160
 		effect_sprite.modulate = Color.from_hsv(0, 0.8, 1.0, 0.5)
 		if character is Baikin:
 			effect_sprite.modulate.h = 280 / 360.0

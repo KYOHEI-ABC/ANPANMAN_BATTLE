@@ -18,54 +18,43 @@ func _init(character: Character, rival: Character) -> void:
 	frame_count = randi_range(16, 32)
 	walk_direction = character.direction
 
-	character.attack_cool_time_max /= 2.0
-	character.special_cool_time_max /= 2.0
+	# character.attack_cool_time_max /= 2.0
+	# character.special_cool_time_max /= 2.0
 
 
 func process() -> void:
-	# return
 	if character.state == Character.State.LOSE:
 		return
 
 	if character.state == Character.State.ATTACKING:
-		if randf() < 1 / 8.0:
+		if randf() < 1 / 16.0:
 			character.attack()
 
 	frame_count -= 1
 	if frame_count < 0:
 		frame_count = randi_range(16, 32)
 		walk_direction = character.direction
-		if randf() > 0.666:
-			walk_direction = 0 if randf() < 0.666 else character.direction * -1
+		if randf() > 0.5:
+			walk_direction = 0 if randf() < 0.5 else character.direction * -1
 
 
 	if randf() < 1 / 160.0:
 		character.jump()
 	if rival.is_jumping():
-		if randf() < 1 / 32.0:
+		if randf() < 1 / 16.0:
 			character.jump()
 
-	if randf() < 1 / 60.0:
+	if randf() < 1 / 64.0:
 		character.special()
 
-	if randf() < 1 / 300.0:
-		character.attack()
-
-	if rival.attack_cool_time < rival.attack_cool_time_max:
-		if randf() < 1 / 8.0:
-			character.dash()
 
 	var distance = abs(character.position.x - rival.position.x)
-
 	if distance < 200:
 		if randf() < attack_probability_close:
 			character.attack()
 
-	if randf() < 1 / 160.0:
+	if randf() < 1 / 128.0:
 		character.dash()
 
-	if rival.state == Character.State.ATTACKING:
-		if randf() < 1 / 8.0:
-			walk_direction = 0 if randf() < 0.5 else character.direction * -1
 
 	character.walk(walk_direction)

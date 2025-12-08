@@ -26,20 +26,20 @@ func _ready():
 	player.rival = rival
 	rival.rival = player
 
-	hp_sliders.append(Game.GameHSlider.new(Vector2(700, 30), Color(0, 1, 0)))
-	hp_sliders[0].position = Vector2(-750, -380)
+	hp_sliders.append(Game.GameHSlider.new(Vector2(500, 25), Color(0, 1, 0)))
+	hp_sliders[0].position = Vector2(-500 - 100, -300)
 	add_child(hp_sliders[0])
 
-	hp_sliders.append(Game.GameHSlider.new(Vector2(700, 30), Color(0, 1, 0)))
-	hp_sliders[1].position = Vector2(50, -380)
+	hp_sliders.append(Game.GameHSlider.new(Vector2(500, 25), Color(0, 1, 0)))
+	hp_sliders[1].position = Vector2(100, -300)
 	add_child(hp_sliders[1])
 
-	sp_sliders.append(Game.GameHSlider.new(Vector2(700, 20), Color(1, 1, 0)))
-	sp_sliders[0].position = Vector2(-750, -340)
+	sp_sliders.append(Game.GameHSlider.new(Vector2(500, 20), Color(1, 1, 0)))
+	sp_sliders[0].position = Vector2(-500 - 100, -260)
 	add_child(sp_sliders[0])
 
-	sp_sliders.append(Game.GameHSlider.new(Vector2(700, 20), Color(1, 1, 0)))
-	sp_sliders[1].position = Vector2(50, -340)
+	sp_sliders.append(Game.GameHSlider.new(Vector2(500, 20), Color(1, 1, 0)))
+	sp_sliders[1].position = Vector2(100, -260)
 	add_child(sp_sliders[1])
 
 
@@ -111,14 +111,6 @@ func _process(delta: float) -> void:
 
 	bot.process()
 
-	collision()
-		
-func collision() -> void:
-	for area in player.get_overlapping_areas():
-		if area == rival:
-			var sign = sign(player.position.x - rival.position.x)
-			player.velocity = Vector2(3.2 * sign, -3.2)
-			rival.velocity = Vector2(-3.2 * sign, -3.2)
 
 	update_sliders()
 
@@ -164,6 +156,7 @@ class CustomCollisionShape2D extends CollisionShape2D:
 		color_rect.color = Color.from_hsv(randf(), 1, 1, 0.0)
 		color_rect.size = size
 		color_rect.position = - size / 2
+		color_rect.position.y += 160
 
 
 class GameHSlider extends HSlider:

@@ -70,6 +70,6 @@ static func label_new() -> Label:
 	label.size = Main.WINDOW
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.add_theme_font_size_override("font_size", 128)
+	label.add_theme_font_size_override("font_size", 96)
 	label.add_theme_color_override("font_color", Color(1, 1, 0))
 	return label

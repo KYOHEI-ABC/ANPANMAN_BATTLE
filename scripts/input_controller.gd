@@ -5,7 +5,7 @@ var rect: Rect2 = Rect2(Vector2(-1000, -1000), Vector2(3000, 3000))
 var pressed: Vector2 = Vector2.ZERO
 var drag: Vector2 = Vector2.ZERO
 
-var pressed_time: float = 8.0
+var pressed_time: float = 1000.0
 
 signal signal_pressed(position: Vector2, double_tap: bool)
 

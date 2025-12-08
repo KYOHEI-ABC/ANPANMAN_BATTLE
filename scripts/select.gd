@@ -27,7 +27,7 @@ func _ready() -> void:
 	button.size = Vector2(360, 90)
 	button.add_theme_font_size_override("font_size", 32)
 	button.text = "START"
-	button.position = - button.size / 2 + Vector2(0, 300)
+	button.position = - button.size / 2 + Vector2(0, 240)
 	add_child(button)
 
 	await get_tree().create_timer(0.5).timeout
@@ -81,7 +81,7 @@ func _process(_delta: float) -> void:
 	if model:
 		model.queue_free()
 	model = Main.MODELS[1 if idx == 1 else 0].instantiate()
-	model.position = Vector3(-5.5, -1.8, 0)
+	model.position = Vector3(-4.8, -0.8, 0)
 	model.rotation_degrees.y = -150
 	model.scale = Vector3.ONE * 3
 	add_child(model)
@@ -89,6 +89,11 @@ func _process(_delta: float) -> void:
 
 class Arcade extends Node:
 	func _ready() -> void:
+		var label := Main.label_new()
+		add_child(label)
+		label.text = "VS"
+		label.position.y += 220
+
 		var sprites: Array[Sprite2D] = Select.create_sprites()
 		for sprite in sprites:
 			add_child(sprite)
@@ -112,13 +117,13 @@ class Arcade extends Node:
 	
 		var model: Node3D = null
 		model = Main.MODELS[1 if Main.PLAYER_INDEX == 1 else 0].instantiate()
-		model.position = Vector3(-5.5, -1.8, 0)
+		model.position = Vector3(-4.8, -0.8, 0)
 		model.rotation_degrees.y = -150
 		model.scale = Vector3.ONE * 3
 		add_child(model)
 
 		model = Main.MODELS[1 if Main.RIVAL_INDEXES[0] == 1 else 0].instantiate()
-		model.position = Vector3(5.5, -1.8, 0)
+		model.position = Vector3(4.8, -0.8, 0)
 		model.rotation_degrees.y = 150
 		model.scale = Vector3.ONE * 3
 		add_child(model)

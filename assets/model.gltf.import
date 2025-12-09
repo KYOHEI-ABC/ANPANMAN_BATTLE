@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://d3blriswie10y"
-path="res://.godot/imported/baikinban.gltf-2d21c729761d93ad5383a43f1e4aa1a2.scn"
+uid="uid://cu0kqaroep5k0"
+path="res://.godot/imported/model.gltf-4432e1d5b4c94a9db4cc04c06132acf8.scn"
 
 [deps]
 
-source_file="res://assets/baikinban.gltf"
-dest_files=["res://.godot/imported/baikinban.gltf-2d21c729761d93ad5383a43f1e4aa1a2.scn"]
+source_file="res://assets/model.gltf"
+dest_files=["res://.godot/imported/model.gltf-4432e1d5b4c94a9db4cc04c06132acf8.scn"]
 
 [params]
 

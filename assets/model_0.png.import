@@ -2,16 +2,19 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://burqaepa6ivoo"
-path="res://.godot/imported/anpanman.png-fcc902ac3ac177295d848f3445763c4b.ctex"
+uid="uid://7m7ivbnfk3wg"
+path="res://.godot/imported/model_0.png-2354ccd5ea47669d14b3ecf72eed0175.ctex"
 metadata={
 "vram_texture": false
+}
+generator_parameters={
+"md5": "6ae20d515bb0569d5fb3676cc9befd67"
 }
 
 [deps]
 
-source_file="res://assets/anpanman.png"
-dest_files=["res://.godot/imported/anpanman.png-fcc902ac3ac177295d848f3445763c4b.ctex"]
+source_file="res://assets/model_0.png"
+dest_files=["res://.godot/imported/model_0.png-2354ccd5ea47669d14b3ecf72eed0175.ctex"]
 
 [params]
 
@@ -21,7 +24,7 @@ compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -31,4 +34,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

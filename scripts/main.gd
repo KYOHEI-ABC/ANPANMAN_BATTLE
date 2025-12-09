@@ -12,25 +12,25 @@ static var RIVAL_INDEXES: Array[int] = [1, 2, 3, 4, 5, 6, 7]
 static var HIT_STOP_COUNT: int = 0
 
 const MODELS: Array[PackedScene] = [
-	preload("res://assets/anpanman.gltf"),
-	preload("res://assets/baikinman.gltf"),
-	preload("res://assets/dokin.gltf"),
-	preload("res://assets/baikinman.gltf"),
-	preload("res://assets/anpanman.gltf"),
-	preload("res://assets/baikinman.gltf"),
-	preload("res://assets/anpanman.gltf"),
-	preload("res://assets/baikinman.gltf"),
+	preload("res://assets/model.gltf"),
+	preload("res://assets/model.gltf"),
+	preload("res://assets/model.gltf"),
+	preload("res://assets/model.gltf"),
+	preload("res://assets/model.gltf"),
+	preload("res://assets/model.gltf"),
+	preload("res://assets/model.gltf"),
+	preload("res://assets/model.gltf"),
 ]
 
 const SPRITES: Array[Texture2D] = [
-	preload("res://assets/anpanman_edited.png"),
-	preload("res://assets/baikinman_edited.png"),
-	preload("res://assets/dokin_edited.png"),
-	preload("res://assets/baikinman_edited.png"),
-	preload("res://assets/anpanman_edited.png"),
-	preload("res://assets/baikinman_edited.png"),
-	preload("res://assets/anpanman_edited.png"),
-	preload("res://assets/anpanman_edited.png"),
+	preload("res://assets/model.png"),
+	preload("res://assets/model.png"),
+	preload("res://assets/model.png"),
+	preload("res://assets/model.png"),
+	preload("res://assets/model.png"),
+	preload("res://assets/model.png"),
+	preload("res://assets/model.png"),
+	preload("res://assets/model.png"),
 ]
 
 const BGM: AudioStream = preload("res://assets/bgm.mp3")

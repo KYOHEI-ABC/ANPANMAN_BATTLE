@@ -36,7 +36,5 @@ func get_average_color(input_path: String) -> Color:
 	return color
 
 func _init():
-	create_sprite_with_background("res://assets/anpanman.png", Vector2i(128, 128), get_average_color("res://assets/anpanman.png"))
-	create_sprite_with_background("res://assets/baikinman.png", Vector2i(128, 128), get_average_color("res://assets/baikinman.png"))
-	create_sprite_with_background("res://assets/dokin.png", Vector2i(128, 128), get_average_color("res://assets/dokin.png"))
+	create_sprite_with_background("res://assets/model.png", Vector2i(128, 128), get_average_color("res://assets/model.png"))
 	quit()

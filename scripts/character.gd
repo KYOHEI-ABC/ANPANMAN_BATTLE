@@ -18,7 +18,7 @@ var attack_cool_time: int = 0
 var attack_cool_time_max: int = 16
 var special_cool_time: int = 0
 var special_cool_time_max: int = 160
-var hp_max: int = 360
+var hp_max: int = 256
 var walk_acceleration: float = 1.0
 var jump_velocity: float = -16.0
 var friction: float = 0.92
@@ -29,7 +29,6 @@ var dash_velocity: float = 24.0
 var audio_player = AudioStreamPlayer.new()
 
 
-const EFFECT_SPRITE: Texture2D = preload("res://assets/effect.png")
 const EFFECT_SOUND: AudioStream = preload("res://assets/effect.mp3")
 
 
@@ -43,10 +42,10 @@ enum State {
 var state: State = State.IDLE
 
 var attack_infos: Array[Attack.Info] = [
-	Attack.Info.new([8, 2, 8], Vector2(50, 0), Vector2(100, 100), 10, Vector2(0, -8), 8, 32),
-	Attack.Info.new([8, 2, 8], Vector2(50, 0), Vector2(100, 100), 10, Vector2(0, -8), 8, 32),
-	Attack.Info.new([8, 2, 16], Vector2(50, 0), Vector2(100, 100), 10, Vector2(64, -8), 16, 32),
-	Attack.Info.new([16, 48, 16], Vector2(50, 0), Vector2(100, 100), 30, Vector2(32, -64), 32, 8),
+	Attack.Info.new([8, 2, 8], Vector2(50, 0), Vector2(100, 100), 8, Vector2(0, -8), 8, 32),
+	Attack.Info.new([8, 2, 8], Vector2(50, 0), Vector2(100, 100), 8, Vector2(0, -8), 8, 32),
+	Attack.Info.new([8, 2, 16], Vector2(50, 0), Vector2(100, 100), 8, Vector2(64, -8), 8, 32),
+	Attack.Info.new([16, 48, 16], Vector2(50, 0), Vector2(100, 100), 32, Vector2(64, -32), 64, 32),
 ]
 
 static func character_new(index: int) -> Character:
@@ -190,7 +189,7 @@ func idle() -> void:
 		return
 	state = State.IDLE
 
-	velocity = Vector2.ZERO
+	# velocity = Vector2.ZERO
 
 	for attack in attacks:
 		attack.queue_free()
@@ -230,7 +229,6 @@ class Attack extends Area2D:
 	var direction: int = 1
 	var collision_shape: Game.CustomCollisionShape2D
 	var current_combo: int = 0
-	var effect_sprite: Sprite2D
 	class Info:
 		var counts: Array[int]
 		var position: Vector2
@@ -265,19 +263,6 @@ class Attack extends Area2D:
 		collision_shape = Game.CustomCollisionShape2D.new(info.size)
 		self.current_combo = current_combo
 		add_child(collision_shape)
-		effect_sprite = Sprite2D.new()
-		effect_sprite.texture = EFFECT_SPRITE
-		add_child(effect_sprite)
-		effect_sprite.visible = false
-		effect_sprite.scale /= 1.5
-		if direction == -1:
-			effect_sprite.flip_h = true
-		effect_sprite.position.y = 160
-		effect_sprite.modulate = Color.from_hsv(0, 0.8, 1.0, 0.5)
-		if character is Baikin:
-			effect_sprite.modulate.h = 280 / 360.0
-		elif character is Anpan:
-			effect_sprite.modulate.h = 0.0
 
 	func process() -> bool:
 		if frame_count < 0:
@@ -285,7 +270,6 @@ class Attack extends Area2D:
 		if frame_count == total_frame_count():
 			character.model.action()
 			character.velocity.x += character.attack_move * direction
-			effect_sprite.visible = true
 		elif frame_count == info.counts[2]:
 			character.model.idle()
 		character.unique_process(self)

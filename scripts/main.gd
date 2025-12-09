@@ -14,7 +14,7 @@ static var HIT_STOP_COUNT: int = 0
 const MODELS: Array[PackedScene] = [
 	preload("res://assets/anpanman.gltf"),
 	preload("res://assets/baikinman.gltf"),
-	preload("res://assets/anpanman.gltf"),
+	preload("res://assets/dokin.gltf"),
 	preload("res://assets/baikinman.gltf"),
 	preload("res://assets/anpanman.gltf"),
 	preload("res://assets/baikinman.gltf"),
@@ -23,14 +23,14 @@ const MODELS: Array[PackedScene] = [
 ]
 
 const SPRITES: Array[Texture2D] = [
-	preload("res://assets/a_edited.png"),
-	preload("res://assets/b_edited.png"),
-	preload("res://assets/a_edited.png"),
-	preload("res://assets/a_edited.png"),
-	preload("res://assets/a_edited.png"),
-	preload("res://assets/a_edited.png"),
-	preload("res://assets/a_edited.png"),
-	preload("res://assets/a_edited.png"),
+	preload("res://assets/anpanman_edited.png"),
+	preload("res://assets/baikinman_edited.png"),
+	preload("res://assets/dokin_edited.png"),
+	preload("res://assets/baikinman_edited.png"),
+	preload("res://assets/anpanman_edited.png"),
+	preload("res://assets/baikinman_edited.png"),
+	preload("res://assets/anpanman_edited.png"),
+	preload("res://assets/anpanman_edited.png"),
 ]
 
 const BGM: AudioStream = preload("res://assets/bgm.mp3")

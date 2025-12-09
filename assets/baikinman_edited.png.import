@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cnt5a4sip0hel"
-path="res://.godot/imported/a_edited.png-02214bd9a36e448fb5ef854426ba6706.ctex"
+uid="uid://c4xquf4a2ceie"
+path="res://.godot/imported/baikinman_edited.png-86aa2bfc084d1f65036f29af61e271b7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/a_edited.png"
-dest_files=["res://.godot/imported/a_edited.png-02214bd9a36e448fb5ef854426ba6706.ctex"]
+source_file="res://assets/baikinman_edited.png"
+dest_files=["res://.godot/imported/baikinman_edited.png-86aa2bfc084d1f65036f29af61e271b7.ctex"]
 
 [params]
 

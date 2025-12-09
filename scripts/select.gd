@@ -80,7 +80,7 @@ func _process(_delta: float) -> void:
 	old_index = idx
 	if model:
 		model.queue_free()
-	model = Main.MODELS[1 if idx == 1 else 0].instantiate()
+	model = Main.MODELS[idx].instantiate()
 	model.position = Vector3(-4.8, -0.8, 0)
 	model.rotation_degrees.y = -150
 	model.scale = Vector3.ONE * 3

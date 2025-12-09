@@ -2,19 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4pjidrkbnana"
-path="res://.godot/imported/b_0.png-2e5dace03906a94f4a914fb49332f47b.ctex"
+uid="uid://dfwk50ih8cj3m"
+path="res://.godot/imported/dokin.png-d2f01fa8098d557bb0c9cdf3d9fdbdb1.ctex"
 metadata={
 "vram_texture": false
-}
-generator_parameters={
-"md5": "f9c4c5d4c035b5c972c34419a76fb8e8"
 }
 
 [deps]
 
-source_file="res://assets/b_0.png"
-dest_files=["res://.godot/imported/b_0.png-2e5dace03906a94f4a914fb49332f47b.ctex"]
+source_file="res://assets/dokin.png"
+dest_files=["res://.godot/imported/dokin.png-d2f01fa8098d557bb0c9cdf3d9fdbdb1.ctex"]
 
 [params]
 
@@ -24,7 +21,7 @@ compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -34,4 +31,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

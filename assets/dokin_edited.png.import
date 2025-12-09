@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ccn3sex4i1x5i"
-path="res://.godot/imported/square.png-a07b0c09e99da012e8f7e5d58d728c57.ctex"
+uid="uid://d0afphkx2hevi"
+path="res://.godot/imported/dokin_edited.png-448f7828c448387a7825a2ad2747a5a2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/square.png"
-dest_files=["res://.godot/imported/square.png-a07b0c09e99da012e8f7e5d58d728c57.ctex"]
+source_file="res://assets/dokin_edited.png"
+dest_files=["res://.godot/imported/dokin_edited.png-448f7828c448387a7825a2ad2747a5a2.ctex"]
 
 [params]
 

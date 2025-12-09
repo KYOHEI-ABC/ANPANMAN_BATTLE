@@ -3,7 +3,9 @@ extends SceneTree
 const SIZE = 128
 
 const ASSETS = [
-	"model.gltf",
+	"anpanman.gltf",
+	"baikinman.gltf",
+	"dokin.gltf",
 ]
 
 func _init():

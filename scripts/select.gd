@@ -116,13 +116,13 @@ class Arcade extends Node:
 			sprites[i].modulate = Color(1, 1, 1, 1)
 	
 		var model: Node3D = null
-		model = Main.MODELS[1 if Main.PLAYER_INDEX == 1 else 0].instantiate()
+		model = Main.MODELS[Main.PLAYER_INDEX].instantiate()
 		model.position = Vector3(-4.8, -0.8, 0)
 		model.rotation_degrees.y = -150
 		model.scale = Vector3.ONE * 3
 		add_child(model)
 
-		model = Main.MODELS[1 if Main.RIVAL_INDEXES[0] == 1 else 0].instantiate()
+		model = Main.MODELS[Main.RIVAL_INDEXES[0]].instantiate()
 		model.position = Vector3(4.8, -0.8, 0)
 		model.rotation_degrees.y = 150
 		model.scale = Vector3.ONE * 3

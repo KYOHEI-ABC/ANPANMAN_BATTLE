@@ -2,7 +2,7 @@ class_name Select extends Node
 
 const CELL_SIZE := 160
 
-var sprites: Array[Sprite2D] = []
+var sprites: Array[SubViewportContainer] = []
 var cursor: ColorRect
 var map := Array2D.new_array_2d(Vector2(4, 2), -1)
 var model: Node3D
@@ -43,14 +43,48 @@ func _ready() -> void:
 	)
 
 
-static func create_sprites() -> Array[Sprite2D]:
-	var sprites: Array[Sprite2D] = []
-	for i in Main.SPRITES.size():
-		var sprite := Sprite2D.new()
-		sprite.texture = Main.SPRITES[i]
-		sprite.position = Vector2(i % 4, i / 4) * CELL_SIZE + -Vector2(1.5, 0.5) * CELL_SIZE
-		sprites.append(sprite)
-	return sprites
+static func create_sprites() -> Array[SubViewportContainer]:
+	var colors: Array[Color] = [
+		Color(1.0, 0.6, 0.6), # 赤系
+		Color(0.6, 0.6, 1.0), # 青系
+		Color(1.0, 0.8, 0.6), # オレンジ系
+		Color(0.6, 1.0, 0.6), # 緑系
+		Color(1.0, 1.0, 0.6), # 黄系
+		Color(0.6, 1.0, 1.0), # 水色系
+		Color(1.0, 0.6, 1.0), # ピンク系
+		Color(0.8, 0.8, 0.8), # グレー系
+	]
+	var containers: Array[SubViewportContainer] = []
+	for i in Main.MODELS.size():
+		var container := SubViewportContainer.new()
+		container.size = Vector2(CELL_SIZE - 32, CELL_SIZE - 32)
+		container.position = Vector2(i % 4, i / 4) * CELL_SIZE + -Vector2(1.5, 0.5) * CELL_SIZE - container.size / 2
+		container.stretch = true
+
+		var viewport := SubViewport.new()
+		viewport.own_world_3d = true
+		container.add_child(viewport)
+
+		var camera := Camera3D.new()
+		camera.position = Vector3(0, 0, 8.0)
+		camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+		camera.size = 0.8
+		viewport.add_child(camera)
+
+		var env := Environment.new()
+		env.background_mode = Environment.BG_COLOR
+		env.background_color = colors[i % colors.size()]
+		camera.environment = env
+
+		camera.add_child(DirectionalLight3D.new())
+
+		var model: Node3D = Main.MODELS[i].instantiate()
+		viewport.add_child(model)
+		model.position.y = -1.2
+		model.rotation_degrees.y = -150
+		containers.append(container)
+
+	return containers
 
 
 func _input(event: InputEvent) -> void:
@@ -72,7 +106,7 @@ func _input(event: InputEvent) -> void:
 			Array2D.move_value(map, 0, Vector2(0, -1))
 
 func _process(_delta: float) -> void:
-	cursor.position = sprites[Array2D.get_position_value(map, Main.PLAYER_INDEX)].position - cursor.size / 2
+	cursor.position = sprites[Array2D.get_position_value(map, Main.PLAYER_INDEX)].position + sprites[0].size / 2 - cursor.size / 2
 
 	var idx := Array2D.get_position_value(map, 0)
 	if old_index == idx:
@@ -94,7 +128,7 @@ class Arcade extends Node:
 		label.text = "VS"
 		label.position.y += 220
 
-		var sprites: Array[Sprite2D] = Select.create_sprites()
+		var sprites: Array[SubViewportContainer] = Select.create_sprites()
 		for sprite in sprites:
 			add_child(sprite)
 			sprite.modulate = Color(0.5, 0.5, 0.5, 0.5)
@@ -106,9 +140,9 @@ class Arcade extends Node:
 			cursor.z_index = -1
 			add_child(cursor)
 			if i == 0:
-				cursor.position = sprites[Main.PLAYER_INDEX].position - cursor.size / 2
+				cursor.position = sprites[Main.PLAYER_INDEX].position + sprites[0].size / 2 - cursor.size / 2
 			else:
-				cursor.position = sprites[Main.RIVAL_INDEXES[0]].position - cursor.size / 2
+				cursor.position = sprites[Main.RIVAL_INDEXES[0]].position + sprites[0].size / 2 - cursor.size / 2
 
 		sprites[Main.PLAYER_INDEX].modulate = Color(1, 1, 1, 1)
 
